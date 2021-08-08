@@ -46,13 +46,8 @@ const GeneratorTitle = styled(Title)`
 
 const GeneratorValue = styled(Text)`
     padding-left: ${(props) => props.theme.space[4]};
-    padding-top: ${(props) => props.theme.space[4]};
-`;
-
-const HeaderRightButtonText = styled.Text`
-    color: white;
-    font-size: ${(props) => props.theme.fontSizes.title};
     padding-right: ${(props) => props.theme.space[4]};
+    padding-top: ${(props) => props.theme.space[4]};
 `;
 
 //#endregion
@@ -62,16 +57,11 @@ export const Generator_3 = ({ navigation, route }) => {
     const [newValue_2, setNewValue_2] = useState('');
     const [newValue_3, setNewValue_3] = useState('');
     const [isSave, setIsSave] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
-    const [existingValue_1, setExistingValue_1] = useState(
-        route.params.generatedValue[0]
-    );
-    const [existingValue_2, setExistingValue_2] = useState(
-        route.params.generatedValue[1]
-    );
-    const [existingValue_3, setExistingValue_3] = useState(
-        route.params.generatedValue[2]
-    );
+    const [existingValue_1, setExistingValue_1] = useState('');
+    const [existingValue_2, setExistingValue_2] = useState('');
+    const [existingValue_3, setExistingValue_3] = useState('');
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -97,7 +87,7 @@ export const Generator_3 = ({ navigation, route }) => {
                     icon="keyboard-backspace"
                     uppercase="false"
                     onPress={() => {
-                        setIsSave(true);
+                        navigation.navigate('RoomGenerator');
                     }}
                 >
                     Cancel
@@ -107,57 +97,59 @@ export const Generator_3 = ({ navigation, route }) => {
     }, [navigation]);
 
     useEffect(() => {
+        if (route.params.generatedValue) {
+            setExistingValue_1(route.params.generatedValue[0]);
+            setExistingValue_2(route.params.generatedValue[1]);
+            setExistingValue_3(route.params.generatedValue[2]);
+            setIsEditing(true);
+        }
+    }, [route.params]);
+
+    useEffect(() => {
         if (isSave) {
-            let value = '';
+            if (isEditing || (!isEditing && newValue_1 !== '' && newValue_2 !== '' && newValue_3 !== '')) {
+                let value = '';
 
-            if (route.params.type === 'Prominent Room Ornamentations') {
-                value = `The prominent ornamentations in the room are ${
-                    newValue_1 === '' ? existingValue_1 : newValue_1
-                } that are ${
-                    newValue_2 === '' ? existingValue_2 : newValue_2
-                } and ${newValue_3 === '' ? existingValue_3 : newValue_3}`;
-            } else if (route.params.type === 'Place') {
-                value = `${newValue_1 === '' ? existingValue_1 : newValue_1} ${
-                    newValue_2 === '' ? existingValue_2 : newValue_2
-                } ${newValue_3 === '' ? existingValue_3 : newValue_3}`;
-            } else if (route.params.type === 'Neutral Inhabitant') {
-                value = `There is a neutral inhabitant in the room who appears to be a ${
-                    newValue_1 === '' ? existingValue_1 : newValue_1
-                }, ${newValue_2 === '' ? existingValue_2 : newValue_2}, ${
-                    newValue_3 === '' ? existingValue_3 : newValue_3
-                }`;
-            } else if (route.params.type === 'Traps') {
-                value = `The traps in the room ${
-                    newValue_1 === '' ? existingValue_1 : newValue_1
-                } and they target the victim's ${
-                    newValue_2 === '' ? existingValue_2 : newValue_2
-                } with ${newValue_3 === '' ? existingValue_3 : newValue_3}`;
-            } else if (route.params.type === 'Treasure') {
-                value = `The treasure in the room is a ${
-                    newValue_1 === '' ? existingValue_1 : newValue_1
-                }, ${newValue_2 === '' ? existingValue_2 : newValue_2}, ${
-                    newValue_3 === '' ? existingValue_3 : newValue_3
-                }`;
+                // Set the concatenated string value based on the type.
+                if (route.params.type === 'Prominent Room Ornamentations') {
+                    value = `${newValue_1 === '' ? existingValue_1 : newValue_1} that are ${newValue_2 === '' ? existingValue_2 : newValue_2} and ${
+                        newValue_3 === '' ? existingValue_3 : newValue_3
+                    }`;
+                } else if (route.params.type === 'Place') {
+                    value = `${newValue_1 === '' ? existingValue_1 : newValue_1} ${newValue_2 === '' ? existingValue_2 : newValue_2} ${
+                        newValue_3 === '' ? existingValue_3 : newValue_3
+                    }`;
+                } else if (route.params.type === 'Neutral Inhabitant') {
+                    value = `The neutral inhabitant is a ${newValue_1 === '' ? existingValue_1 : newValue_1}, ${newValue_2 === '' ? existingValue_2 : newValue_2}, ${
+                        newValue_3 === '' ? existingValue_3 : newValue_3
+                    }`;
+                } else if (route.params.type === 'Traps') {
+                    value = `The traps here: ${newValue_1 === '' ? existingValue_1 : newValue_1} and they target the victim's ${
+                        newValue_2 === '' ? existingValue_2 : newValue_2
+                    } with ${newValue_3 === '' ? existingValue_3 : newValue_3}`;
+                } else if (route.params.type === 'Treasure') {
+                    value = `The treasure in the room is a: ${newValue_1 === '' ? existingValue_1 : newValue_1}, ${newValue_2 === '' ? existingValue_2 : newValue_2}, ${
+                        newValue_3 === '' ? existingValue_3 : newValue_3
+                    }`;
+                }
+
+                route.params.setRoomObject.setRoomObject(route.params.type, [
+                    newValue_1 === '' ? existingValue_1 : newValue_1,
+                    newValue_2 === '' ? existingValue_2 : newValue_2,
+                    newValue_3 === '' ? existingValue_3 : newValue_3,
+                    '',
+                    value,
+                    true,
+                ]);
+                navigation.navigate('RoomGenerator');
             }
-
-            route.params.setRoomObject.setRoomObject(route.params.type, [
-                newValue_1 === '' ? existingValue_1 : newValue_1,
-                newValue_2 === '' ? existingValue_2 : newValue_2,
-                newValue_3 === '' ? existingValue_3 : newValue_3,
-                '',
-                value,
-                true,
-            ]);
-            navigation.navigate('RoomGenerator');
         }
     });
 
     return (
         <GeneratorContainer>
             <GeneratorTitle>{route.params.type}</GeneratorTitle>
-            <GeneratorValue>
-                {existingValue_1 !== undefined ? existingValue_1 : newValue_1}
-            </GeneratorValue>
+            <GeneratorValue>{existingValue_1 !== undefined ? existingValue_1 : newValue_1}</GeneratorValue>
             <ButtonContainer>
                 <GeneratorButton
                     mode="contained"
@@ -168,10 +160,7 @@ export const Generator_3 = ({ navigation, route }) => {
 
                         if (route.params.type === 'Place') {
                             newValue_1 = getPlace_1();
-                        } else if (
-                            route.params.type ===
-                            'Prominent Room Ornamentations'
-                        ) {
+                        } else if (route.params.type === 'Prominent Room Ornamentations') {
                             newValue_1 = getOrnamentations_1();
                         } else if (route.params.type === 'Neutral Inhabitant') {
                             newValue_1 = getNeutralInhabitant_1();
@@ -192,9 +181,7 @@ export const Generator_3 = ({ navigation, route }) => {
                     Generate
                 </GeneratorButton>
             </ButtonContainer>
-            <GeneratorValue>
-                {existingValue_2 === undefined ? newValue_2 : existingValue_2}
-            </GeneratorValue>
+            <GeneratorValue>{existingValue_2 === undefined ? newValue_2 : existingValue_2}</GeneratorValue>
             <ButtonContainer>
                 <GeneratorButton
                     mode="contained"
@@ -205,10 +192,7 @@ export const Generator_3 = ({ navigation, route }) => {
 
                         if (route.params.type === 'Place') {
                             newValue_2 = getPlace_2();
-                        } else if (
-                            route.params.type ===
-                            'Prominent Room Ornamentations'
-                        ) {
+                        } else if (route.params.type === 'Prominent Room Ornamentations') {
                             newValue_2 = getOrnamentations_2();
                         } else if (route.params.type === 'Neutral Inhabitant') {
                             newValue_2 = getNeutralInhabitant_2();
@@ -229,9 +213,7 @@ export const Generator_3 = ({ navigation, route }) => {
                     Generate
                 </GeneratorButton>
             </ButtonContainer>
-            <GeneratorValue>
-                {existingValue_3 === undefined ? newValue_3 : existingValue_3}
-            </GeneratorValue>
+            <GeneratorValue>{existingValue_3 === undefined ? newValue_3 : existingValue_3}</GeneratorValue>
             <ButtonContainer>
                 <GeneratorButton
                     mode="contained"
@@ -242,9 +224,7 @@ export const Generator_3 = ({ navigation, route }) => {
 
                         if (route.params.type == 'Place') {
                             newValue_3 = getPlace_3();
-                        } else if (
-                            route.params.type == 'Prominent Room Ornamentations'
-                        ) {
+                        } else if (route.params.type == 'Prominent Room Ornamentations') {
                             newValue_3 = getOrnamentations_3();
                         } else if (route.params.type === 'Neutral Inhabitant') {
                             newValue_3 = getNeutralInhabitant_3();

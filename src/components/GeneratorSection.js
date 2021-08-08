@@ -21,13 +21,7 @@ const GeneratorSectionButton = styled(Button)`
 
 //#endregion
 
-export const GeneratorSection = ({
-    navigation,
-    generatorTitle,
-    type,
-    getRoomObject,
-    setRoomObject,
-}) => {
+export const GeneratorSection = ({ navigation, generatorTitle, type, getRoomObject, setRoomObject, setResetStocking }) => {
     const assignGenerator = () => {
         switch (type) {
             case 'Place':
@@ -42,6 +36,7 @@ export const GeneratorSection = ({
                     type: type,
                     setRoomObject: { setRoomObject },
                     generatedValue: getRoomObject,
+                    setResetStocking: setResetStocking,
                 });
                 break;
             case 'Room Atmosphere':
@@ -100,6 +95,20 @@ export const GeneratorSection = ({
                     generatedValue: getRoomObject,
                 });
                 break;
+            case 'Large Items':
+                navigation.navigate('Generator_1', {
+                    type: type,
+                    setRoomObject: { setRoomObject },
+                    generatedValue: getRoomObject,
+                });
+                break;
+            case 'Small Items':
+                navigation.navigate('Generator_1', {
+                    type: type,
+                    setRoomObject: { setRoomObject },
+                    generatedValue: getRoomObject,
+                });
+                break;
         }
     };
 
@@ -115,15 +124,9 @@ export const GeneratorSection = ({
                     mode="contained"
                     dark="true"
                     color="#28587B"
-                    icon={
-                        getRoomObject && getRoomObject[5] == true
-                            ? 'swap-vertical'
-                            : 'plus'
-                    }
+                    icon={getRoomObject && getRoomObject[5] == true ? 'swap-vertical' : 'plus'}
                 >
-                    {getRoomObject && getRoomObject[5] == true
-                        ? 'Change'
-                        : 'Add'}
+                    {getRoomObject && getRoomObject[5] == true ? 'Change' : 'Add'}
                 </GeneratorSectionButton>
             </Card.Actions>
         </GeneratorCardContainer>

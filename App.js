@@ -3,25 +3,19 @@ import * as React from 'react';
 import { ThemeProvider } from 'styled-components/native';
 import { theme } from './src/infrastructure/theme/index';
 import { LogBox } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { Generator_1 } from './src/components/Generator_1';
-import { Generator_2 } from './src/components/Generator_2';
-import { Generator_3 } from './src/components/Generator_3';
-import { Generator_4 } from './src/components/Generator_4';
-
-import { RoomGenerator } from './src/features/room-generator/RoomGenerator';
-import { RoomList } from './src/features/room-list/RoomList';
+import { About } from './src/screens/About';
+import { MainStackNavigator } from './src/components/MainStackNavigator';
+import { GameList } from './src/screens/GameList';
 
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import {
-    useFonts as useOswald,
-    Oswald_400Regular,
-} from '@expo-google-fonts/oswald';
+import { useFonts as useOswald, Oswald_400Regular } from '@expo-google-fonts/oswald';
 import { useFonts as useLato, Lato_400Regular } from '@expo-google-fonts/lato';
 
-const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 const App = () => {
     const [oswaldLoaded] = useOswald({
@@ -36,73 +30,34 @@ const App = () => {
         return null;
     }
 
-    LogBox.ignoreLogs([
-        'Non-serializable values were found in the navigation state',
-    ]);
+    LogBox.ignoreLogs(['Non-serializable values were found in the navigation state']);
 
     return (
         <ThemeProvider theme={theme}>
             <NavigationContainer>
-                <Stack.Navigator initialRouteName="RoomList">
-                    <Stack.Screen
-                        name="RoomList"
-                        component={RoomList}
-                        options={{
-                            title: 'Rooms',
-                            headerTintColor: '#fff',
-                            headerStyle: { backgroundColor: '#28587B' },
-                        }}
-                    />
-                    <Stack.Screen
-                        name="RoomGenerator"
-                        component={RoomGenerator}
-                        options={{
-                            title: 'Generic Room Stocker',
-                            headerTintColor: '#fff',
-                            headerStyle: { backgroundColor: '#28587B' },
-                        }}
-                    />
-                    <Stack.Screen
-                        name="Generator_1"
-                        component={Generator_1}
-                        options={({ route }) => ({
-                            title: 'Generator',
-                            headerTintColor: '#fff',
-                            headerStyle: { backgroundColor: '#28587B' },
-                            headerBackTitle: 'Cancel',
-                        })}
-                    />
-                    <Stack.Screen
-                        name="Generator_2"
-                        component={Generator_2}
-                        options={({ route }) => ({
-                            title: 'Generator',
-                            headerTintColor: '#fff',
-                            headerStyle: { backgroundColor: '#28587B' },
-                            headerBackTitle: 'Cancel',
-                        })}
-                    />
-                    <Stack.Screen
-                        name="Generator_3"
-                        component={Generator_3}
-                        options={({ route }) => ({
-                            title: 'Generator',
-                            headerTintColor: '#fff',
-                            headerStyle: { backgroundColor: '#28587B' },
-                            headerBackTitle: 'Cancel',
-                        })}
-                    />
-                    <Stack.Screen
-                        name="Generator_4"
-                        component={Generator_4}
-                        options={({ route }) => ({
-                            title: 'Generator',
-                            headerTintColor: '#fff',
-                            headerStyle: { backgroundColor: '#28587B' },
-                            headerBackTitle: 'Cancel',
-                        })}
-                    />
-                </Stack.Navigator>
+                <Tab.Navigator
+                    initialRouteName="GameList"
+                    screenOptions={({ route }) => ({
+                        headerShown: false,
+                        tabBarIcon: ({ focused, color, size }) => {
+                            let iconName;
+
+                            if (route.name === 'Games') {
+                                iconName = 'list';
+                            } else if (route.name === 'About') {
+                                iconName = 'information-circle-outline';
+                            }
+
+                            // You can return any component that you like here!
+                            return <Ionicons name={iconName} size={size} color={color} />;
+                        },
+                        tabBarActiveTintColor: theme.colours.ui.primary,
+                        tabBarInactiveTintColor: 'gray',
+                    })}
+                >
+                    <Tab.Screen name="Games" component={MainStackNavigator} />
+                    <Tab.Screen name="About" component={About} />
+                </Tab.Navigator>
             </NavigationContainer>
         </ThemeProvider>
     );

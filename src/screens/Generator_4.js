@@ -4,12 +4,7 @@ import styled from 'styled-components/native';
 import { useState, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Title, Text, Button } from 'react-native-paper';
-import {
-    getDangerousInhabitant_1,
-    getDangerousInhabitant_2,
-    getDangerousInhabitant_3,
-    getDangerousInhabitant_4,
-} from '../services/DataService';
+import { getDangerousInhabitant_1, getDangerousInhabitant_2, getDangerousInhabitant_3, getDangerousInhabitant_4 } from '../services/DataService';
 
 //#region Styles
 
@@ -37,11 +32,6 @@ const GeneratorTitle = styled(Title)`
 const GeneratorValue = styled(Text)`
     padding-left: ${(props) => props.theme.space[4]};
     padding-top: ${(props) => props.theme.space[4]};
-`;
-
-const HeaderRightButtonText = styled.Text`
-    color: white;
-    font-size: ${(props) => props.theme.fontSizes.title};
     padding-right: ${(props) => props.theme.space[4]};
 `;
 
@@ -53,19 +43,12 @@ export const Generator_4 = ({ navigation, route }) => {
     const [newValue_3, setNewValue_3] = useState('');
     const [newValue_4, setNewValue_4] = useState('');
     const [isSave, setIsSave] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
-    const [existingValue_1, setExistingValue_1] = useState(
-        route.params.generatedValue[0]
-    );
-    const [existingValue_2, setExistingValue_2] = useState(
-        route.params.generatedValue[1]
-    );
-    const [existingValue_3, setExistingValue_3] = useState(
-        route.params.generatedValue[2]
-    );
-    const [existingValue_4, setExistingValue_4] = useState(
-        route.params.generatedValue[3]
-    );
+    const [existingValue_1, setExistingValue_1] = useState('');
+    const [existingValue_2, setExistingValue_2] = useState('');
+    const [existingValue_3, setExistingValue_3] = useState('');
+    const [existingValue_4, setExistingValue_4] = useState('');
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -91,7 +74,7 @@ export const Generator_4 = ({ navigation, route }) => {
                     icon="keyboard-backspace"
                     uppercase="false"
                     onPress={() => {
-                        setIsSave(true);
+                        navigation.navigate('RoomGenerator');
                     }}
                 >
                     Cancel
@@ -101,35 +84,45 @@ export const Generator_4 = ({ navigation, route }) => {
     }, [navigation]);
 
     useEffect(() => {
+        if (route.params.generatedValue) {
+            setExistingValue_1(route.params.generatedValue[0]);
+            setExistingValue_2(route.params.generatedValue[1]);
+            setExistingValue_3(route.params.generatedValue[2]);
+            setExistingValue_3(route.params.generatedValue[3]);
+            setIsEditing(true);
+        }
+    }, [route.params]);
+
+    useEffect(() => {
         if (isSave) {
-            let value = '';
+            if (isEditing || (!isEditing && newValue_1 !== '' && newValue_2 !== '' && newValue_3 !== '' && newValue_4 !== '')) {
+                let value = '';
 
-            if (route.params.type === 'Dangerous Inhabitant') {
-                value = `There is a dangerous inhabitant in the room who appears to be a ${
-                    newValue_1 === '' ? existingValue_1 : newValue_1
-                }, ${newValue_2 === '' ? existingValue_2 : newValue_2}, ${
-                    newValue_3 === '' ? existingValue_3 : newValue_3
-                }, ${newValue_4 === '' ? existingValue_4 : newValue_4}`;
+                if (route.params.type === 'Dangerous Inhabitant') {
+                    value = `The dangerous inhabitant is a ${newValue_1 === '' ? existingValue_1 : newValue_1}, ${newValue_2 === '' ? existingValue_2 : newValue_2}, ${
+                        newValue_3 === '' ? existingValue_3 : newValue_3
+                    }, ${newValue_4 === '' ? existingValue_4 : newValue_4}`;
+                }
+
+                route.params.setRoomObject.setRoomObject(route.params.type, [
+                    newValue_1 === '' ? existingValue_1 : newValue_1,
+                    newValue_2 === '' ? existingValue_2 : newValue_2,
+                    newValue_3 === '' ? existingValue_3 : newValue_3,
+                    newValue_4 === '' ? existingValue_4 : newValue_4,
+                    value,
+                    true,
+                ]);
+                navigation.navigate('RoomGenerator');
+            } else {
+                navigation.navigate('RoomGenerator');
             }
-
-            route.params.setRoomObject.setRoomObject(route.params.type, [
-                newValue_1 === '' ? existingValue_1 : newValue_1,
-                newValue_2 === '' ? existingValue_2 : newValue_2,
-                newValue_3 === '' ? existingValue_3 : newValue_3,
-                newValue_4 === '' ? existingValue_4 : newValue_4,
-                value,
-                true,
-            ]);
-            navigation.navigate('RoomGenerator');
         }
     });
 
     return (
         <GeneratorContainer>
             <GeneratorTitle>{route.params.type}</GeneratorTitle>
-            <GeneratorValue>
-                {existingValue_1 !== undefined ? existingValue_1 : newValue_1}
-            </GeneratorValue>
+            <GeneratorValue>{existingValue_1 !== undefined ? existingValue_1 : newValue_1}</GeneratorValue>
             <ButtonContainer>
                 <GeneratorButton
                     mode="contained"
@@ -149,9 +142,7 @@ export const Generator_4 = ({ navigation, route }) => {
                     Generate
                 </GeneratorButton>
             </ButtonContainer>
-            <GeneratorValue>
-                {existingValue_2 === undefined ? newValue_2 : existingValue_2}
-            </GeneratorValue>
+            <GeneratorValue>{existingValue_2 === undefined ? newValue_2 : existingValue_2}</GeneratorValue>
             <ButtonContainer>
                 <GeneratorButton
                     mode="contained"
@@ -171,9 +162,7 @@ export const Generator_4 = ({ navigation, route }) => {
                     Generate
                 </GeneratorButton>
             </ButtonContainer>
-            <GeneratorValue>
-                {existingValue_3 === undefined ? newValue_3 : existingValue_3}
-            </GeneratorValue>
+            <GeneratorValue>{existingValue_3 === undefined ? newValue_3 : existingValue_3}</GeneratorValue>
             <ButtonContainer>
                 <GeneratorButton
                     mode="contained"
@@ -193,9 +182,7 @@ export const Generator_4 = ({ navigation, route }) => {
                     Generate
                 </GeneratorButton>
             </ButtonContainer>
-            <GeneratorValue>
-                {existingValue_4 === undefined ? newValue_4 : existingValue_4}
-            </GeneratorValue>
+            <GeneratorValue>{existingValue_4 === undefined ? newValue_4 : existingValue_4}</GeneratorValue>
             <ButtonContainer>
                 <GeneratorButton
                     mode="contained"

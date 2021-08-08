@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Generic",
-    "slug": "Generic",
+    "name": "RoomStocker",
+    "slug": "Generic-Room-Stocker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import styled from 'styled-components/native';
 import { Card, Paragraph, Button, Subheading } from 'react-native-paper';
-import { View } from 'react-native';
 
 const CardContainer = styled(Card)`
     background-color: ${(props) => props.theme.colours.bg.primary};
@@ -23,12 +22,54 @@ const ButtonSection = styled.View`
 `;
 
 export const RoomSection = ({ navigation, room, deleteFunc }) => {
-    const [roomDescription, setRoomDescription] = useState('');
+    const InhabitantView = () => {
+        return (
+            <CardParagraph>
+                <Subheading>Inhabitant: </Subheading>
+                {room.neutralInhabitant[4] === '' ? room.dangerousInhabitant[4] : room.neutralInhabitant[4]}
+            </CardParagraph>
+        );
+    };
 
-    useEffect(() => {
-        let desc = `This room contains an ${room.stocking[4]} ${room.atmosphere[4]} ${room.ornamentation[4]}`;
-        setRoomDescription(desc);
-    }, [room]);
+    const InhabitantReactionView = () => {
+        return (
+            <CardParagraph>
+                <Subheading>Inhabitant reaction: {'\n'}</Subheading>
+                {room.inhabitantReaction[4]}
+            </CardParagraph>
+        );
+    };
+
+    const TrapView = () => {
+        return (
+            <CardParagraph>
+                <Subheading>Traps: </Subheading>
+                {room.trap[4]}
+            </CardParagraph>
+        );
+    };
+
+    const TreasureView = () => {
+        return (
+            <CardParagraph>
+                <Subheading>Treasure: </Subheading>
+                {room.treasure[4]}
+            </CardParagraph>
+        );
+    };
+
+    const DeviceView = () => {
+        return (
+            <CardParagraph>
+                <Subheading>Device: </Subheading>
+                {room.device[4]}
+            </CardParagraph>
+        );
+    };
+
+    const BlankView = () => {
+        return <></>;
+    };
 
     return (
         <CardContainer>
@@ -47,11 +88,18 @@ export const RoomSection = ({ navigation, room, deleteFunc }) => {
                     {room.ornamentation[4]}
                 </CardParagraph>
                 <CardParagraph>
-                    <Subheading>Inhabitant: </Subheading>
-                    {room.neutralInhabitant[4] === ''
-                        ? room.dangerousInhabitant[4]
-                        : room.neutralInhabitant[4]}
+                    <Subheading>Large Items: </Subheading>
+                    {room.largeItem[4]}
                 </CardParagraph>
+                <CardParagraph>
+                    <Subheading>Small Items: </Subheading>
+                    {room.smallItem[4]}
+                </CardParagraph>
+                {room.neutralInhabitant[4] || room.dangerousInhabitant[4] !== '' ? <InhabitantView /> : <BlankView />}
+                {room.inhabitantReaction[4] !== '' ? <InhabitantReactionView /> : <BlankView />}
+                {room.trap[4] !== '' ? <TrapView /> : <BlankView />}
+                {room.treasure[4] !== '' ? <TreasureView /> : <BlankView />}
+                {room.device[4] !== '' ? <DeviceView /> : <BlankView />}
                 <ButtonSection>
                     <Button
                         mode="text"
@@ -62,6 +110,7 @@ export const RoomSection = ({ navigation, room, deleteFunc }) => {
                         onPress={() => {
                             navigation.navigate('RoomGenerator', {
                                 room: room,
+                                editing: true,
                             });
                         }}
                     >

@@ -4,12 +4,7 @@ import styled from 'styled-components/native';
 import { useState, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Title, Text, Button } from 'react-native-paper';
-import {
-    getInhabitantReaction_1,
-    getInhabitantReaction_2,
-    getDevice_1,
-    getDevice_2,
-} from '../services/DataService';
+import { getInhabitantReaction_1, getInhabitantReaction_2, getDevice_1, getDevice_2 } from '../services/DataService';
 
 //#region Styles
 
@@ -36,6 +31,7 @@ const GeneratorTitle = styled(Title)`
 
 const GeneratorValue = styled(Text)`
     padding-left: ${(props) => props.theme.space[4]};
+    padding-right: ${(props) => props.theme.space[4]};
     padding-top: ${(props) => props.theme.space[4]};
 `;
 
@@ -45,13 +41,10 @@ export const Generator_2 = ({ navigation, route }) => {
     const [newValue_1, setNewValue_1] = useState('');
     const [newValue_2, setNewValue_2] = useState('');
     const [isSave, setIsSave] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
-    const [existingValue_1, setExistingValue_1] = useState(
-        route.params.generatedValue[0]
-    );
-    const [existingValue_2, setExistingValue_2] = useState(
-        route.params.generatedValue[1]
-    );
+    const [existingValue_1, setExistingValue_1] = useState('');
+    const [existingValue_2, setExistingValue_2] = useState('');
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -77,7 +70,7 @@ export const Generator_2 = ({ navigation, route }) => {
                     icon="keyboard-backspace"
                     uppercase="false"
                     onPress={() => {
-                        setIsSave(true);
+                        navigation.navigate('RoomGenerator');
                     }}
                 >
                     Cancel
@@ -87,41 +80,45 @@ export const Generator_2 = ({ navigation, route }) => {
     }, [navigation]);
 
     useEffect(() => {
+        if (route.params.generatedValue) {
+            setExistingValue_1(route.params.generatedValue[0]);
+            setExistingValue_2(route.params.generatedValue[1]);
+            setIsEditing(true);
+        }
+    }, [route.params]);
+
+    useEffect(() => {
         if (isSave) {
-            let value = '';
+            if (isEditing || (!isEditing && newValue_1 !== '' && newValue_2 !== '')) {
+                let value = '';
 
-            if (route.params.type === 'Inhabitant Reaction to Interlopers') {
-                value = `The inhabitant in the room reacts to interlopers in a ${
-                    newValue_1 === '' ? existingValue_1 : newValue_1
-                } manner and are ${
-                    newValue_2 === '' ? existingValue_2 : newValue_2
-                }`;
-            } else if (route.params.type === 'Device') {
-                value = `There is a device in the room that ${
-                    newValue_1 === '' ? existingValue_1 : newValue_1
-                } and it operates by ${
-                    newValue_2 === '' ? existingValue_2 : newValue_2
-                }`;
+                if (route.params.type === 'Inhabitant Reaction to Interlopers') {
+                    value = `Mood: ${newValue_1 === '' ? existingValue_1 : newValue_1}.\nAction: ${newValue_2 === '' ? existingValue_2 : newValue_2}`;
+                } else if (route.params.type === 'Device') {
+                    value = `The device's action: ${newValue_1 === '' ? existingValue_1 : newValue_1} \nThe device's operation: ${
+                        newValue_2 === '' ? existingValue_2 : newValue_2
+                    }`;
+                }
+
+                route.params.setRoomObject.setRoomObject(route.params.type, [
+                    newValue_1 === '' ? existingValue_1 : newValue_1,
+                    newValue_2 === '' ? existingValue_2 : newValue_2,
+                    '',
+                    '',
+                    value,
+                    true,
+                ]);
+                navigation.navigate('RoomGenerator');
+            } else {
+                navigation.navigate('RoomGenerator');
             }
-
-            route.params.setRoomObject.setRoomObject(route.params.type, [
-                newValue_1 === '' ? existingValue_1 : newValue_1,
-                newValue_2 === '' ? existingValue_2 : newValue_2,
-                '',
-                '',
-                value,
-                true,
-            ]);
-            navigation.navigate('RoomGenerator');
         }
     });
 
     return (
         <GeneratorContainer>
             <GeneratorTitle>{route.params.type}</GeneratorTitle>
-            <GeneratorValue>
-                {existingValue_1 !== undefined ? existingValue_1 : newValue_1}
-            </GeneratorValue>
+            <GeneratorValue>{existingValue_1 !== undefined ? existingValue_1 : newValue_1}</GeneratorValue>
             <ButtonContainer>
                 <GeneratorButton
                     mode="contained"
@@ -130,10 +127,7 @@ export const Generator_2 = ({ navigation, route }) => {
                     onPress={() => {
                         let newValue_1 = '';
 
-                        if (
-                            route.params.type ===
-                            'Inhabitant Reaction to Interlopers'
-                        ) {
+                        if (route.params.type === 'Inhabitant Reaction to Interlopers') {
                             newValue_1 = getInhabitantReaction_1();
                         } else if (route.params.type === 'Device') {
                             newValue_1 = getDevice_1();
@@ -150,9 +144,7 @@ export const Generator_2 = ({ navigation, route }) => {
                     Generate
                 </GeneratorButton>
             </ButtonContainer>
-            <GeneratorValue>
-                {existingValue_2 === undefined ? newValue_2 : existingValue_2}
-            </GeneratorValue>
+            <GeneratorValue>{existingValue_2 === undefined ? newValue_2 : existingValue_2}</GeneratorValue>
             <ButtonContainer>
                 <GeneratorButton
                     mode="contained"
@@ -161,10 +153,7 @@ export const Generator_2 = ({ navigation, route }) => {
                     onPress={() => {
                         let newValue_2 = '';
 
-                        if (
-                            route.params.type ===
-                            'Inhabitant Reaction to Interlopers'
-                        ) {
+                        if (route.params.type === 'Inhabitant Reaction to Interlopers') {
                             newValue_2 = getInhabitantReaction_2();
                         } else if (route.params.type === 'Device') {
                             newValue_2 = getDevice_2();
