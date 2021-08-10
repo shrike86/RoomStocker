@@ -9,7 +9,7 @@ import { GameSection } from '../components/GameSection';
 
 const Container = styled.SafeAreaView`
     flex: 1;
-    margin-top: 10px;
+    background-color: ${(props) => props.theme.colours.bg.primary};
 `;
 
 export const GameList = ({ navigation, route }) => {
@@ -25,7 +25,10 @@ export const GameList = ({ navigation, route }) => {
                     icon="plus"
                     uppercase="false"
                     onPress={() => {
-                        navigation.navigate('CreateGame');
+                        navigation.navigate('CreateGame', {
+                            navigatingFrom: 'GameList',
+                            Action: 'Create',
+                        });
                     }}
                 >
                     Create
@@ -34,16 +37,20 @@ export const GameList = ({ navigation, route }) => {
         });
     }, [navigation]);
 
-    const createGamme = (game) => {
+    const createGame = (game) => {
         let tempGames = [...games];
         tempGames.push(game);
         setGames(tempGames);
     };
 
-    const updateGame = (game) => {
+    const updateGames = (game, rooms) => {
         for (let index in games) {
             if (games[index] !== undefined && games[index].gameId === game.gameId) {
-                games[index] = game;
+                if (rooms) {
+                    games[index].rooms = rooms;
+                } else {
+                    games[index] = game;
+                }
                 setGames([...games]);
                 return true;
             }
@@ -65,8 +72,16 @@ export const GameList = ({ navigation, route }) => {
 
     useEffect(() => {
         if (route.params) {
-            if (!updateGame(route.params.game)) {
-                createGamme(route.params.game);
+            if (route.params.navigatingFrom == 'RoomList' && route.params.action == 'Save') {
+                if (route.params.rooms !== undefined || route.params.rooms !== []) {
+                    updateGames(route.params.game, route.params.rooms);
+                }
+            }
+
+            if (route.params.navigatingFrom == 'CreateGame' && route.params.action == 'Save') {
+                if (!updateGames(route.params.game)) {
+                    createGame(route.params.game);
+                }
             }
         }
     }, [route.params]);

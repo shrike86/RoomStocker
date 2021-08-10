@@ -9,11 +9,13 @@ import { RoomSection } from '../components/RoomSection';
 
 const Container = styled.SafeAreaView`
     flex: 1;
-    margin-top: 10px;
+    background-color: ${(props) => props.theme.colours.bg.primary};
 `;
 
 export const RoomList = ({ navigation, route }) => {
     const [rooms, setRooms] = useState([]);
+    const [isSave, setIsSave] = useState(false);
+    const [currentGame, setCurrentGame] = useState({});
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -25,7 +27,10 @@ export const RoomList = ({ navigation, route }) => {
                     icon="plus"
                     uppercase="false"
                     onPress={() => {
-                        navigation.navigate('RoomGenerator');
+                        navigation.navigate('RoomGenerator', {
+                            navigatingFrom: 'RoomList',
+                            action: 'Create',
+                        });
                     }}
                 >
                     Create
@@ -36,13 +41,13 @@ export const RoomList = ({ navigation, route }) => {
                     mode="text"
                     dark="false"
                     color="#fff"
-                    icon="keyboard-backspace"
+                    icon="content-save"
                     uppercase="false"
                     onPress={() => {
-                        navigation.navigate('GameList');
+                        setIsSave(true);
                     }}
                 >
-                    Back
+                    Save
                 </Button>
             ),
         });
@@ -78,12 +83,32 @@ export const RoomList = ({ navigation, route }) => {
     const renderItem = ({ item }) => <RoomItem room={item} navigation={navigation} />;
 
     useEffect(() => {
-        if (route.params) {
+        if (isSave) {
+            navigation.navigate('GameList', {
+                game: currentGame,
+                rooms: rooms,
+                navigatingFrom: 'RoomList',
+                action: 'Save',
+            });
+        }
+    }, [isSave]);
+
+    // when navigating from the game list, save the current game and populate rooms based on the games rooms.
+    useEffect(() => {
+        if (route.params.navigatingFrom == 'GameList' && route.params.action == 'Edit') {
+            setCurrentGame(route.params.game);
+            setRooms([...route.params.game.rooms]);
+        }
+    }, [route.params]);
+
+    // Create/update room after being navigated from the room generator.
+    useEffect(() => {
+        if (route.params.navigatingFrom == 'RoomGenerator' && route.params.action == 'Save') {
             if (!updateRoom(route.params.room)) {
                 createRoom(route.params.room);
             }
         }
-    }, [route.params]);
+    }, [route.params.room]);
 
     return (
         <Container>

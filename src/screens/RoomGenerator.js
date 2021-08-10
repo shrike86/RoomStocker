@@ -28,6 +28,8 @@ export const RoomGeneratorTitle = styled(Title)`
 //#endregion
 
 export const RoomGenerator = ({ navigation, route }) => {
+    const [isSave, setIsSave] = useState(false);
+
     React.useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
@@ -38,7 +40,7 @@ export const RoomGenerator = ({ navigation, route }) => {
                     icon="content-save"
                     uppercase="false"
                     onPress={() => {
-                        setIsSaved(true);
+                        setIsSave(true);
                     }}
                 >
                     Save
@@ -52,7 +54,10 @@ export const RoomGenerator = ({ navigation, route }) => {
                     icon="keyboard-backspace"
                     uppercase="false"
                     onPress={() => {
-                        navigation.navigate('RoomList');
+                        navigation.navigate('RoomList', {
+                            navigatingFrom: 'RoomGenerator',
+                            action: 'Cancel',
+                        });
                     }}
                 >
                     Cancel
@@ -61,7 +66,6 @@ export const RoomGenerator = ({ navigation, route }) => {
         });
     }, [navigation]);
 
-    const [isSaved, setIsSaved] = useState(false);
     const [isEditingRoom, setIsEditingRoom] = useState(false);
     const [editingGuid, setEditingGuid] = useState('');
     const [isResetStocking, setIsResetStocking] = useState(false);
@@ -79,74 +83,81 @@ export const RoomGenerator = ({ navigation, route }) => {
     ]);
 
     //#region Init Generator Objects
-    const defaultObj = ['', '', '', '', '', false];
+    const defaultObj = {
+        generatedValue_1: '',
+        generatedValue_2: '',
+        generatedValue_3: '',
+        generatedValue_4: '',
+        displayValue: '',
+        isAssigned: false,
+    };
 
-    const [placeObject, setPlaceObject] = useState(['', '', '', '', '', false]);
+    const [placeObject, setPlaceObject] = useState(defaultObj);
 
-    const [stockingObject, setStockingObject] = useState(['', '', '', '', '', false]);
+    const [stockingObject, setStockingObject] = useState(defaultObj);
 
-    const [atmosphereObject, setAtmosphereObject] = useState(['', '', '', '', '', false]);
+    const [atmosphereObject, setAtmosphereObject] = useState(defaultObj);
 
-    const [ornamentationsObject, setOrnamentationsObject] = useState(['', '', '', '', '', false]);
+    const [ornamentationsObject, setOrnamentationsObject] = useState(defaultObj);
 
-    const [neutralInhabitantObject, setNeutralInhabitantObject] = useState(['', '', '', '', '', false]);
+    const [neutralInhabitantObject, setNeutralInhabitantObject] = useState(defaultObj);
 
-    const [dangerousInhabitantObject, setDangerousInhabitantObject] = useState(['', '', '', '', '', false]);
+    const [dangerousInhabitantObject, setDangerousInhabitantObject] = useState(defaultObj);
 
-    const [inhabitantReactionObject, setInhabitantReactionObject] = useState(['', '', '', '', '', false]);
+    const [inhabitantReactionObject, setInhabitantReactionObject] = useState(defaultObj);
 
-    const [trapsObject, setTrapsObject] = useState(['', '', '', '', '', false]);
+    const [trapsObject, setTrapsObject] = useState(defaultObj);
 
-    const [treasureObject, setTreasureObject] = useState(['', '', '', '', '', false]);
+    const [treasureObject, setTreasureObject] = useState(defaultObj);
 
-    const [deviceObject, setDeviceObject] = useState(['', '', '', '', '', false]);
+    const [deviceObject, setDeviceObject] = useState(defaultObj);
 
-    const [largeItemObject, setLargeItemObject] = useState(['', '', '', '', '', false]);
+    const [largeItemObject, setLargeItemObject] = useState(defaultObj);
 
-    const [smallItemObject, setSmallItemObject] = useState(['', '', '', '', '', false]);
+    const [smallItemObject, setSmallItemObject] = useState(defaultObj);
 
     //#endregion
 
     //#region Generator Objects Setter and Getters
 
-    const setRoomObject = (type, newValue) => {
+    const setRoomObject = (type, newRoomObject) => {
         switch (type) {
             case 'Place':
-                setPlaceObject(newValue);
+                setPlaceObject(newRoomObject);
                 break;
             case 'Basic Room Stocking':
-                setStockingObject(newValue);
-                addCardsBasedOnRoomState(setGeneratorCards, newValue);
+                setStockingObject(newRoomObject);
+                addCardsBasedOnRoomState(setGeneratorCards, newRoomObject.displayValue);
                 break;
             case 'Room Atmosphere':
-                setAtmosphereObject(newValue);
+                setAtmosphereObject(newRoomObject);
                 break;
             case 'Prominent Room Ornamentations':
-                setOrnamentationsObject(newValue);
+                setOrnamentationsObject(newRoomObject);
                 break;
             case 'Neutral Inhabitant':
-                setNeutralInhabitantObject(newValue);
+                setNeutralInhabitantObject(newRoomObject);
                 break;
             case 'Dangerous Inhabitant':
-                setDangerousInhabitantObject(newValue);
+                setDangerousInhabitantObject(newRoomObject);
                 break;
             case 'Inhabitant Reaction to Interlopers':
-                setInhabitantReactionObject(newValue);
+                setInhabitantReactionObject(newRoomObject);
                 break;
             case 'Traps':
-                setTrapsObject(newValue);
+                setTrapsObject(newRoomObject);
                 break;
             case 'Treasure':
-                setTreasureObject(newValue);
+                setTreasureObject(newRoomObject);
                 break;
             case 'Device':
-                setDeviceObject(newValue);
+                setDeviceObject(newRoomObject);
                 break;
             case 'Large Items':
-                setLargeItemObject(newValue);
+                setLargeItemObject(newRoomObject);
                 break;
             case 'Small Items':
-                setSmallItemObject(newValue);
+                setSmallItemObject(newRoomObject);
                 break;
         }
     };
@@ -195,19 +206,38 @@ export const RoomGenerator = ({ navigation, route }) => {
         ></GeneratorSection>
     );
 
-    // Set editing status and editing guid.
     useEffect(() => {
-        if (route.params?.editing) {
-            setIsEditingRoom(true);
-            setEditingGuid(route.params.room.roomId);
-        } else {
-            setIsEditingRoom(false);
+        if (isSave) {
+            navigation.navigate('RoomList', {
+                room: {
+                    roomId: !isEditingRoom ? uuidv4() : editingGuid,
+                    place: placeObject,
+                    stocking: stockingObject,
+                    atmosphere: atmosphereObject,
+                    ornamentation: ornamentationsObject,
+                    neutralInhabitant: neutralInhabitantObject,
+                    dangerousInhabitant: dangerousInhabitantObject,
+                    inhabitantReaction: inhabitantReactionObject,
+                    device: deviceObject,
+                    trap: trapsObject,
+                    treasure: treasureObject,
+                    largeItem: largeItemObject,
+                    smallItem: smallItemObject,
+                },
+                navigatingFrom: 'RoomGenerator',
+                action: 'Save',
+            });
         }
-    }, [isEditingRoom]);
+    }, [isSave]);
+
+    useEffect(() => {
+        if (route.params.navigatingFrom === 'Generator' && route.params.action == 'Save') {
+            setRoomObject(route.params.type, route.params.roomObject);
+        }
+    }, [route.params]);
 
     // Clear values for cards that are driven by the current stocking value.
     useEffect(() => {
-        // Reset
         if (isResetStocking) {
             setNeutralInhabitantObject(defaultObj);
             setDangerousInhabitantObject(defaultObj);
@@ -221,7 +251,10 @@ export const RoomGenerator = ({ navigation, route }) => {
 
     // Load in values when editing.
     useEffect(() => {
-        if (route.params) {
+        if (route.params.navigatingFrom === 'RoomList' && route.params.action == 'Edit') {
+            setIsEditingRoom(true);
+            setEditingGuid(route.params.room.roomId);
+
             // This is the default section state.
             const newCards = [
                 {
@@ -235,31 +268,31 @@ export const RoomGenerator = ({ navigation, route }) => {
             ];
 
             // Add cards based on the route params values.
-            if (route.params.room.neutralInhabitant[4] !== '' || route.params.room.dangerousInhabitant[4] !== '') {
-                if (route.params.room.neutralInhabitant[4] !== '') {
+            if (route.params.room.neutralInhabitant.isAssigned || route.params.room.dangerousInhabitant.isAssigned) {
+                if (route.params.room.neutralInhabitant.isAssigned) {
                     newCards[1].data.push('Neutral Inhabitant');
-                } else if (route.params.room.dangerousInhabitant[4] !== '') {
+                } else if (route.params.room.dangerousInhabitant.isAssigned) {
                     newCards[1].data.push('Dangerous Inhabitant');
                 }
 
                 newCards[1].data.push('Inhabitant Reaction to Interlopers');
 
-                if (route.params.room.trap[4] !== '') {
+                if (route.params.room.trap.isAssigned) {
                     newCards[1].data.push('Traps');
-                } else if (route.params.room.treasure[4] !== '') {
+                } else if (route.params.room.treasure.isAssigned) {
                     newCards[1].data.push('Treasure');
-                } else if (route.params.room.device[4] !== '') {
+                } else if (route.params.room.device.isAssigned) {
                     newCards[1].data.push('Device');
                 }
 
                 setGeneratorCards([...newCards]);
-            } else if (route.params.room.trap[4] !== '') {
+            } else if (route.params.room.trap.isAssigned) {
                 newCards[1].data.push('Traps');
                 setGeneratorCards([...newCards]);
-            } else if (route.params.room.treasure[4] !== '') {
+            } else if (route.params.room.treasure.isAssigned) {
                 newCards[1].data.push('Treasure');
                 setGeneratorCards([...newCards]);
-            } else if (route.params.room.device[4] !== '') {
+            } else if (route.params.room.device.isAssigned) {
                 newCards[1].data.push('Device');
                 setGeneratorCards([...newCards]);
             }
@@ -277,34 +310,10 @@ export const RoomGenerator = ({ navigation, route }) => {
             setTrapsObject(route.params.room.trap);
             setTreasureObject(route.params.room.treasure);
             setDeviceObject(route.params.room.device);
+        } else if (route.params.navigatingFrom === 'RoomList' && route.params.action == 'Create') {
+            setIsEditingRoom(false);
         }
     }, [route.params]);
-
-    useEffect(() => {
-        if (isSaved) {
-            if (placeObject[0] !== '') {
-                navigation.navigate('RoomList', {
-                    room: {
-                        roomId: !isEditingRoom ? uuidv4() : editingGuid,
-                        place: placeObject,
-                        stocking: stockingObject,
-                        atmosphere: atmosphereObject,
-                        ornamentation: ornamentationsObject,
-                        neutralInhabitant: neutralInhabitantObject,
-                        dangerousInhabitant: dangerousInhabitantObject,
-                        inhabitantReaction: inhabitantReactionObject,
-                        device: deviceObject,
-                        trap: trapsObject,
-                        treasure: treasureObject,
-                        largeItem: largeItemObject,
-                        smallItem: smallItemObject,
-                    },
-                });
-            } else {
-                navigation.navigate('RoomList');
-            }
-        }
-    });
 
     return (
         <RoomGeneratorContainer>
@@ -319,7 +328,6 @@ export const RoomGenerator = ({ navigation, route }) => {
                         route={route}
                         cards={setGeneratorCards}
                         getRoomObject={getRoomObject(item)}
-                        setRoomObject={setRoomObject}
                         setResetStocking={setIsResetStocking}
                     />
                 )}

@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components/native';
 
 import { useState, useEffect } from 'react';
-import { TouchableOpacity } from 'react-native';
 import { Title, Text, Button } from 'react-native-paper';
 import {
     getPlace_1,
@@ -53,15 +52,10 @@ const GeneratorValue = styled(Text)`
 //#endregion
 
 export const Generator_3 = ({ navigation, route }) => {
-    const [newValue_1, setNewValue_1] = useState('');
-    const [newValue_2, setNewValue_2] = useState('');
-    const [newValue_3, setNewValue_3] = useState('');
+    const [value_1, setValue_1] = useState('');
+    const [value_2, setValue_2] = useState('');
+    const [value_3, setValue_3] = useState('');
     const [isSave, setIsSave] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-
-    const [existingValue_1, setExistingValue_1] = useState('');
-    const [existingValue_2, setExistingValue_2] = useState('');
-    const [existingValue_3, setExistingValue_3] = useState('');
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -87,7 +81,10 @@ export const Generator_3 = ({ navigation, route }) => {
                     icon="keyboard-backspace"
                     uppercase="false"
                     onPress={() => {
-                        navigation.navigate('RoomGenerator');
+                        navigation.navigate('RoomGenerator', {
+                            navigatingFrom: 'Generator',
+                            action: 'Cancel',
+                        });
                     }}
                 >
                     Cancel
@@ -97,149 +94,110 @@ export const Generator_3 = ({ navigation, route }) => {
     }, [navigation]);
 
     useEffect(() => {
-        if (route.params.generatedValue) {
-            setExistingValue_1(route.params.generatedValue[0]);
-            setExistingValue_2(route.params.generatedValue[1]);
-            setExistingValue_3(route.params.generatedValue[2]);
-            setIsEditing(true);
-        }
+        setValue_1(route.params.roomObject.generatedValue_1);
+        setValue_2(route.params.roomObject.generatedValue_2);
+        setValue_3(route.params.roomObject.generatedValue_3);
     }, [route.params]);
 
     useEffect(() => {
         if (isSave) {
-            if (isEditing || (!isEditing && newValue_1 !== '' && newValue_2 !== '' && newValue_3 !== '')) {
-                let value = '';
-
-                // Set the concatenated string value based on the type.
-                if (route.params.type === 'Prominent Room Ornamentations') {
-                    value = `${newValue_1 === '' ? existingValue_1 : newValue_1} that are ${newValue_2 === '' ? existingValue_2 : newValue_2} and ${
-                        newValue_3 === '' ? existingValue_3 : newValue_3
-                    }`;
-                } else if (route.params.type === 'Place') {
-                    value = `${newValue_1 === '' ? existingValue_1 : newValue_1} ${newValue_2 === '' ? existingValue_2 : newValue_2} ${
-                        newValue_3 === '' ? existingValue_3 : newValue_3
-                    }`;
-                } else if (route.params.type === 'Neutral Inhabitant') {
-                    value = `The neutral inhabitant is a ${newValue_1 === '' ? existingValue_1 : newValue_1}, ${newValue_2 === '' ? existingValue_2 : newValue_2}, ${
-                        newValue_3 === '' ? existingValue_3 : newValue_3
-                    }`;
-                } else if (route.params.type === 'Traps') {
-                    value = `The traps here: ${newValue_1 === '' ? existingValue_1 : newValue_1} and they target the victim's ${
-                        newValue_2 === '' ? existingValue_2 : newValue_2
-                    } with ${newValue_3 === '' ? existingValue_3 : newValue_3}`;
-                } else if (route.params.type === 'Treasure') {
-                    value = `The treasure in the room is a: ${newValue_1 === '' ? existingValue_1 : newValue_1}, ${newValue_2 === '' ? existingValue_2 : newValue_2}, ${
-                        newValue_3 === '' ? existingValue_3 : newValue_3
-                    }`;
-                }
-
-                route.params.setRoomObject.setRoomObject(route.params.type, [
-                    newValue_1 === '' ? existingValue_1 : newValue_1,
-                    newValue_2 === '' ? existingValue_2 : newValue_2,
-                    newValue_3 === '' ? existingValue_3 : newValue_3,
-                    '',
-                    value,
-                    true,
-                ]);
-                navigation.navigate('RoomGenerator');
+            let concatValue = '';
+            // Set the concatenated string value based on the type.
+            if (route.params.type === 'Prominent Room Ornamentations') {
+                concatValue = `${value_1} that are ${value_2} and ${value_3}`;
+            } else if (route.params.type === 'Place') {
+                concatValue = `${value_1} ${value_2} ${value_3}`;
+            } else if (route.params.type === 'Neutral Inhabitant') {
+                concatValue = `The neutral inhabitant is a ${value_1}, ${value_2}, ${value_3}`;
+            } else if (route.params.type === 'Traps') {
+                concatValue = `The traps here: ${value_1} and they target the victim's ${value_2} with ${value_3}`;
+            } else if (route.params.type === 'Treasure') {
+                concatValue = `The treasure in the room is a: ${value_1}, ${value_2}, ${value_3}`;
             }
+
+            navigation.navigate('RoomGenerator', {
+                navigatingFrom: 'Generator',
+                action: 'Save',
+                type: route.params.type,
+                roomObject: {
+                    generatedValue_1: value_1,
+                    generatedValue_2: value_2,
+                    generatedValue_3: value_3,
+                    generatedValue_4: '',
+                    displayValue: concatValue,
+                    isAssigned: true,
+                },
+            });
         }
-    });
+    }, [isSave]);
 
     return (
         <GeneratorContainer>
             <GeneratorTitle>{route.params.type}</GeneratorTitle>
-            <GeneratorValue>{existingValue_1 !== undefined ? existingValue_1 : newValue_1}</GeneratorValue>
+            <GeneratorValue>{value_1}</GeneratorValue>
             <ButtonContainer>
                 <GeneratorButton
                     mode="contained"
                     dark="true"
                     color="#28587B"
                     onPress={() => {
-                        let newValue_1 = '';
-
                         if (route.params.type === 'Place') {
-                            newValue_1 = getPlace_1();
+                            setValue_1(getPlace_1());
                         } else if (route.params.type === 'Prominent Room Ornamentations') {
-                            newValue_1 = getOrnamentations_1();
+                            setValue_1(getOrnamentations_1());
                         } else if (route.params.type === 'Neutral Inhabitant') {
-                            newValue_1 = getNeutralInhabitant_1();
+                            setValue_1(getNeutralInhabitant_1());
                         } else if (route.params.type === 'Traps') {
-                            newValue_1 = getTraps_1();
+                            setValue_1(getTraps_1());
                         } else if (route.params.type === 'Treasure') {
-                            newValue_1 = getTreasure_1();
+                            setValue_1(getTreasure_1());
                         }
-
-                        if (existingValue_1 !== undefined) {
-                            setExistingValue_1(newValue_1);
-                        }
-
-                        // Always set new Value.
-                        setNewValue_1(newValue_1);
                     }}
                 >
                     Generate
                 </GeneratorButton>
             </ButtonContainer>
-            <GeneratorValue>{existingValue_2 === undefined ? newValue_2 : existingValue_2}</GeneratorValue>
+            <GeneratorValue>{value_2}</GeneratorValue>
             <ButtonContainer>
                 <GeneratorButton
                     mode="contained"
                     dark="true"
                     color="#28587B"
                     onPress={() => {
-                        let newValue_2 = '';
-
                         if (route.params.type === 'Place') {
-                            newValue_2 = getPlace_2();
+                            setValue_2(getPlace_2());
                         } else if (route.params.type === 'Prominent Room Ornamentations') {
-                            newValue_2 = getOrnamentations_2();
+                            setValue_2(getOrnamentations_2());
                         } else if (route.params.type === 'Neutral Inhabitant') {
-                            newValue_2 = getNeutralInhabitant_2();
+                            setValue_2(getNeutralInhabitant_2());
                         } else if (route.params.type === 'Traps') {
-                            newValue_2 = getTraps_2();
+                            setValue_2(getTraps_2());
                         } else if (route.params.type === 'Treasure') {
-                            newValue_2 = getTreasure_2();
+                            setValue_2(getTreasure_2());
                         }
-
-                        if (existingValue_2 !== undefined) {
-                            setExistingValue_2(newValue_2);
-                        }
-
-                        // Always set new Value.
-                        setNewValue_2(newValue_2);
                     }}
                 >
                     Generate
                 </GeneratorButton>
             </ButtonContainer>
-            <GeneratorValue>{existingValue_3 === undefined ? newValue_3 : existingValue_3}</GeneratorValue>
+            <GeneratorValue>{value_3}</GeneratorValue>
             <ButtonContainer>
                 <GeneratorButton
                     mode="contained"
                     dark="true"
                     color="#28587B"
                     onPress={() => {
-                        let newValue_3 = '';
-
-                        if (route.params.type == 'Place') {
-                            newValue_3 = getPlace_3();
-                        } else if (route.params.type == 'Prominent Room Ornamentations') {
-                            newValue_3 = getOrnamentations_3();
+                        if (route.params.type === 'Place') {
+                            setValue_3(getPlace_3());
+                        } else if (route.params.type === 'Prominent Room Ornamentations') {
+                            setValue_3(getOrnamentations_3());
                         } else if (route.params.type === 'Neutral Inhabitant') {
-                            newValue_3 = getNeutralInhabitant_3();
+                            setValue_3(getNeutralInhabitant_3());
                         } else if (route.params.type === 'Traps') {
-                            newValue_3 = getTraps_3();
+                            setValue_3(getTraps_3());
                         } else if (route.params.type === 'Treasure') {
-                            newValue_3 = getTreasure_3();
+                            setValue_3(getTreasure_3());
                         }
-
-                        if (existingValue_3 !== undefined) {
-                            setExistingValue_3(newValue_3);
-                        }
-
-                        // Always set new Value.
-                        setNewValue_3(newValue_3);
                     }}
                 >
                     Generate

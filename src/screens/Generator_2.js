@@ -38,13 +38,9 @@ const GeneratorValue = styled(Text)`
 //#endregion
 
 export const Generator_2 = ({ navigation, route }) => {
-    const [newValue_1, setNewValue_1] = useState('');
-    const [newValue_2, setNewValue_2] = useState('');
+    const [value_1, setValue_1] = useState('');
+    const [value_2, setValue_2] = useState('');
     const [isSave, setIsSave] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-
-    const [existingValue_1, setExistingValue_1] = useState('');
-    const [existingValue_2, setExistingValue_2] = useState('');
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -70,7 +66,10 @@ export const Generator_2 = ({ navigation, route }) => {
                     icon="keyboard-backspace"
                     uppercase="false"
                     onPress={() => {
-                        navigation.navigate('RoomGenerator');
+                        navigation.navigate('RoomGenerator', {
+                            navigatingFrom: 'RoomGenerator',
+                            action: 'Cancel',
+                        });
                     }}
                 >
                     Cancel
@@ -80,91 +79,68 @@ export const Generator_2 = ({ navigation, route }) => {
     }, [navigation]);
 
     useEffect(() => {
-        if (route.params.generatedValue) {
-            setExistingValue_1(route.params.generatedValue[0]);
-            setExistingValue_2(route.params.generatedValue[1]);
-            setIsEditing(true);
-        }
+        setValue_1(route.params.roomObject.generatedValue_1);
+        setValue_2(route.params.roomObject.generatedValue_2);
     }, [route.params]);
 
     useEffect(() => {
         if (isSave) {
-            if (isEditing || (!isEditing && newValue_1 !== '' && newValue_2 !== '')) {
-                let value = '';
-
-                if (route.params.type === 'Inhabitant Reaction to Interlopers') {
-                    value = `Mood: ${newValue_1 === '' ? existingValue_1 : newValue_1}.\nAction: ${newValue_2 === '' ? existingValue_2 : newValue_2}`;
-                } else if (route.params.type === 'Device') {
-                    value = `The device's action: ${newValue_1 === '' ? existingValue_1 : newValue_1} \nThe device's operation: ${
-                        newValue_2 === '' ? existingValue_2 : newValue_2
-                    }`;
-                }
-
-                route.params.setRoomObject.setRoomObject(route.params.type, [
-                    newValue_1 === '' ? existingValue_1 : newValue_1,
-                    newValue_2 === '' ? existingValue_2 : newValue_2,
-                    '',
-                    '',
-                    value,
-                    true,
-                ]);
-                navigation.navigate('RoomGenerator');
-            } else {
-                navigation.navigate('RoomGenerator');
+            let concatValue = '';
+            // Set the concatenated string value based on the type.
+            if (route.params.type === 'Inhabitant Reaction to Interlopers') {
+                concatValue = `Mood: ${value_1}.\nAction: ${value_2}`;
+            } else if (route.params.type === 'Device') {
+                concatValue = `The device's action: ${value_1} \nThe device's operation: ${value_2}`;
             }
+
+            navigation.navigate('RoomGenerator', {
+                navigatingFrom: 'Generator',
+                action: 'Save',
+                type: route.params.type,
+                roomObject: {
+                    generatedValue_1: value_1,
+                    generatedValue_2: value_2,
+                    generatedValue_3: '',
+                    generatedValue_4: '',
+                    displayValue: concatValue,
+                    isAssigned: true,
+                },
+            });
         }
-    });
+    }, [isSave]);
 
     return (
         <GeneratorContainer>
             <GeneratorTitle>{route.params.type}</GeneratorTitle>
-            <GeneratorValue>{existingValue_1 !== undefined ? existingValue_1 : newValue_1}</GeneratorValue>
+            <GeneratorValue>{value_1}</GeneratorValue>
             <ButtonContainer>
                 <GeneratorButton
                     mode="contained"
                     dark="true"
                     color="#28587B"
                     onPress={() => {
-                        let newValue_1 = '';
-
                         if (route.params.type === 'Inhabitant Reaction to Interlopers') {
-                            newValue_1 = getInhabitantReaction_1();
+                            setValue_1(getInhabitantReaction_1());
                         } else if (route.params.type === 'Device') {
-                            newValue_1 = getDevice_1();
+                            setValue_1(getDevice_1());
                         }
-
-                        if (existingValue_1 !== undefined) {
-                            setExistingValue_1(newValue_1);
-                        }
-
-                        // Always set new Value.
-                        setNewValue_1(newValue_1);
                     }}
                 >
                     Generate
                 </GeneratorButton>
             </ButtonContainer>
-            <GeneratorValue>{existingValue_2 === undefined ? newValue_2 : existingValue_2}</GeneratorValue>
+            <GeneratorValue>{value_2}</GeneratorValue>
             <ButtonContainer>
                 <GeneratorButton
                     mode="contained"
                     dark="true"
                     color="#28587B"
                     onPress={() => {
-                        let newValue_2 = '';
-
                         if (route.params.type === 'Inhabitant Reaction to Interlopers') {
-                            newValue_2 = getInhabitantReaction_2();
+                            setValue_2(getInhabitantReaction_2());
                         } else if (route.params.type === 'Device') {
-                            newValue_2 = getDevice_2();
+                            setValue_2(getDevice_2());
                         }
-
-                        if (existingValue_2 !== undefined) {
-                            setExistingValue_2(newValue_2);
-                        }
-
-                        // Always set new Value.
-                        setNewValue_2(newValue_2);
                     }}
                 >
                     Generate

@@ -10,15 +10,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 const Container = styled.SafeAreaView`
     flex: 1;
-    margin-top: ${(props) => props.theme.space[2]};
-    margin-left: ${(props) => props.theme.space[3]};
-    margin-right: ${(props) => props.theme.space[3]};
+    background-color: ${(props) => props.theme.colours.bg.primary};
 `;
 
 export const CreateGame = ({ navigation, route }) => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [isSave, setIsSave] = useState(false);
     const [isEditingGame, setIsEditingGame] = useState(false);
     const [editingGuid, setEditingGuid] = useState(false);
 
@@ -32,7 +29,16 @@ export const CreateGame = ({ navigation, route }) => {
                     icon="content-save"
                     uppercase="false"
                     onPress={() => {
-                        setIsSave(true);
+                        navigation.navigate('GameList', {
+                            game: {
+                                gameId: !isEditingGame ? uuidv4() : editingGuid,
+                                name: name,
+                                description: description,
+                                rooms: [],
+                            },
+                            navigatingFrom: 'CreateGame',
+                            action: 'Save',
+                        });
                     }}
                 >
                     Save
@@ -46,7 +52,10 @@ export const CreateGame = ({ navigation, route }) => {
                     icon="keyboard-backspace"
                     uppercase="false"
                     onPress={() => {
-                        navigation.navigate('GameList');
+                        navigation.navigate('GameList', {
+                            navigatingFrom: 'CreateGame',
+                            action: 'Cancel',
+                        });
                     }}
                 >
                     Cancel
@@ -57,33 +66,15 @@ export const CreateGame = ({ navigation, route }) => {
 
     // Set editing status and editing guid.
     useEffect(() => {
-        if (route.params?.editing) {
+        if (route.params.navigatingFrom === 'GameList' && route.params.action == 'Edit') {
             setIsEditingGame(true);
             setEditingGuid(route.params.game.gameId);
+            setName(route.params.game.name);
+            setDescription(route.params.game.description);
         } else {
             setIsEditingGame(false);
         }
     }, [isEditingGame]);
-
-    useEffect(() => {
-        if (isSave) {
-            navigation.navigate('GameList', {
-                game: {
-                    gameId: !isEditingGame ? uuidv4() : editingGuid,
-                    name: name,
-                    description: description,
-                },
-            });
-        }
-    });
-
-    // Load the route values when editing.
-    useEffect(() => {
-        if (route.params) {
-            setName(route.params.game.name);
-            setDescription(route.params.game.description);
-        }
-    }, [route.params]);
 
     return (
         <Container>

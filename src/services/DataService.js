@@ -1546,32 +1546,32 @@ module.exports = {
             },
         ];
         // Add the relevant new sections depending on the value of room stocking.
-        if (inhabitedOnlyValues.includes(generatedValue[0])) {
+        if (inhabitedOnlyValues.includes(generatedValue)) {
             newCards[1].data.push(assignInhabitantBehaviour());
             newCards[1].data.push('Inhabitant Reaction to Interlopers');
             setCards([...newCards]);
-        } else if (inhabitedWithTrap.includes(generatedValue[0])) {
+        } else if (inhabitedWithTrap.includes(generatedValue)) {
             newCards[1].data.push(assignInhabitantBehaviour());
             newCards[1].data.push('Inhabitant Reaction to Interlopers');
             newCards[1].data.push('Traps');
             setCards([...newCards]);
-        } else if (inhabitedWithTreasure.includes(generatedValue[0])) {
+        } else if (inhabitedWithTreasure.includes(generatedValue)) {
             newCards[1].data.push(assignInhabitantBehaviour());
             newCards[1].data.push('Inhabitant Reaction to Interlopers');
             newCards[1].data.push('Treasure');
             setCards([...newCards]);
-        } else if (inhabitedWithDevice.includes(generatedValue[0])) {
+        } else if (inhabitedWithDevice.includes(generatedValue)) {
             newCards[1].data.push(assignInhabitantBehaviour());
             newCards[1].data.push('Inhabitant Reaction to Interlopers');
             newCards[1].data.push('Device');
             setCards([...newCards]);
-        } else if (trapOnly.includes(generatedValue[0])) {
+        } else if (trapOnly.includes(generatedValue)) {
             newCards[1].data.push('Traps');
             setCards([...newCards]);
-        } else if (treasureOnly.includes(generatedValue[0])) {
+        } else if (treasureOnly.includes(generatedValue)) {
             newCards[1].data.push('Treasure');
             setCards([...newCards]);
-        } else if (deviceOnly.includes(generatedValue[0])) {
+        } else if (deviceOnly.includes(generatedValue)) {
             newCards[1].data.push('Device');
             setCards([...newCards]);
         }

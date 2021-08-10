@@ -3,7 +3,11 @@ import { useState } from 'react';
 import styled from 'styled-components/native';
 import { TextInput, Button, Text } from 'react-native-paper';
 
-const FormContainer = styled.View``;
+const FormContainer = styled.View`
+    padding-top: ${(props) => props.theme.space[2]};
+    padding-right: ${(props) => props.theme.space[3]};
+    padding-left: ${(props) => props.theme.space[3]};
+`;
 
 export const CreateGameForm = ({ name, setName, description, setDescription }) => {
     return (

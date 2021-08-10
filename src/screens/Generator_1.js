@@ -38,9 +38,7 @@ const GeneratorValue = styled(Text)`
 //#endregion
 
 export const Generator_1 = ({ navigation, route }) => {
-    const [newValue_1, setNewValue_1] = useState('');
-    const [existingValue_1, setExistingValue_1] = useState('');
-    const [isEditing, setIsEditing] = useState(false);
+    const [value_1, setValue_1] = useState('');
     const [isSave, setIsSave] = useState(false);
 
     React.useLayoutEffect(() => {
@@ -67,7 +65,10 @@ export const Generator_1 = ({ navigation, route }) => {
                     icon="keyboard-backspace"
                     uppercase="false"
                     onPress={() => {
-                        navigation.navigate('RoomGenerator');
+                        navigation.navigate('RoomGenerator', {
+                            navigatingFrom: 'Generator',
+                            action: 'Cancel',
+                        });
                     }}
                 >
                     Cancel
@@ -77,55 +78,50 @@ export const Generator_1 = ({ navigation, route }) => {
     }, [navigation]);
 
     useEffect(() => {
-        if (route.params.generatedValue[4] !== '') {
-            setExistingValue_1(route.params.generatedValue[0]);
-            setIsEditing(true);
-        }
-    }, [route.params]);
-
-    useEffect(() => {
         if (isSave) {
-            if (isEditing || (!isEditing && newValue_1 !== '')) {
-                if (isEditing && newValue_1 !== '') {
-                    route.params.setResetStocking(true);
-                }
-                let value = `${newValue_1 === '' ? existingValue_1 : newValue_1}`;
-                route.params.setRoomObject.setRoomObject(route.params.type, [newValue_1 === '' ? existingValue_1 : newValue_1, '', '', '', value, true]);
-                navigation.navigate('RoomGenerator');
-            } else {
-                navigation.navigate('RoomGenerator');
+            if (route.params.type === 'Basic Room Stocking') {
+                route.params.setResetStocking(true);
             }
+
+            navigation.navigate('RoomGenerator', {
+                navigatingFrom: 'Generator',
+                action: 'Save',
+                type: route.params.type,
+                roomObject: {
+                    generatedValue_1: value_1,
+                    generatedValue_2: '',
+                    generatedValue_3: '',
+                    generatedValue_4: '',
+                    displayValue: value_1,
+                    isAssigned: true,
+                },
+            });
         }
     }, [isSave]);
+
+    useEffect(() => {
+        setValue_1(route.params.roomObject.generatedValue_1);
+    }, [route.params]);
 
     return (
         <GeneratorContainer>
             <GeneratorTitle>{route.params.type}</GeneratorTitle>
-            <GeneratorValue>{existingValue_1 !== undefined ? existingValue_1 : newValue_1}</GeneratorValue>
+            <GeneratorValue>{value_1}</GeneratorValue>
             <ButtonContainer>
                 <GeneratorButton
                     mode="contained"
                     dark="true"
                     color="#28587B"
                     onPress={() => {
-                        let newValue_1 = '';
-
-                        if (route.params.type == 'Basic Room Stocking') {
-                            newValue_1 = getRoomStocking();
-                        } else if (route.params.type == 'Room Atmosphere') {
-                            newValue_1 = getRoomAtmosphere();
-                        } else if (route.params.type == 'Large Items') {
-                            newValue_1 = getLargeItems();
-                        } else if (route.params.type == 'Small Items') {
-                            newValue_1 = getSmallItems();
+                        if (route.params.type === 'Basic Room Stocking') {
+                            setValue_1(getRoomStocking());
+                        } else if (route.params.type === 'Room Atmosphere') {
+                            setValue_1(getRoomAtmosphere());
+                        } else if (route.params.type === 'Large Items') {
+                            setValue_1(getLargeItems());
+                        } else if (route.params.type === 'Small Items') {
+                            setValue_1(getSmallItems());
                         }
-
-                        if (existingValue_1 !== undefined) {
-                            setExistingValue_1(newValue_1);
-                        }
-
-                        // Always set new Value.
-                        setNewValue_1(newValue_1);
                     }}
                 >
                     Generate

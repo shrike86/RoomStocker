@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components/native';
-import { Card, Paragraph, Button, Subheading } from 'react-native-paper';
+import { useState } from 'react';
+import { Card, Paragraph, Button, Subheading, Portal, Dialog } from 'react-native-paper';
 
 const CardContainer = styled(Card)`
     background-color: ${(props) => props.theme.colours.bg.primary};
@@ -22,11 +23,15 @@ const ButtonSection = styled.View`
 `;
 
 export const RoomSection = ({ navigation, room, deleteFunc }) => {
+    const [dialogVisible, setDialogVisible] = useState(false);
+    const showDialog = () => setDialogVisible(true);
+    const hideDialog = () => setDialogVisible(false);
+
     const InhabitantView = () => {
         return (
             <CardParagraph>
-                <Subheading>Inhabitant: </Subheading>
-                {room.neutralInhabitant[4] === '' ? room.dangerousInhabitant[4] : room.neutralInhabitant[4]}
+                <Subheading>Inhabitant: {'\n'}</Subheading>
+                {room.dangerousInhabitant.isAssigned ? room.dangerousInhabitant.displayValue : room.neutralInhabitant.displayValue}
             </CardParagraph>
         );
     };
@@ -35,7 +40,7 @@ export const RoomSection = ({ navigation, room, deleteFunc }) => {
         return (
             <CardParagraph>
                 <Subheading>Inhabitant reaction: {'\n'}</Subheading>
-                {room.inhabitantReaction[4]}
+                {room.inhabitantReaction.displayValue}
             </CardParagraph>
         );
     };
@@ -43,8 +48,8 @@ export const RoomSection = ({ navigation, room, deleteFunc }) => {
     const TrapView = () => {
         return (
             <CardParagraph>
-                <Subheading>Traps: </Subheading>
-                {room.trap[4]}
+                <Subheading>Traps: {'\n'}</Subheading>
+                {room.trap.displayValue}
             </CardParagraph>
         );
     };
@@ -52,8 +57,8 @@ export const RoomSection = ({ navigation, room, deleteFunc }) => {
     const TreasureView = () => {
         return (
             <CardParagraph>
-                <Subheading>Treasure: </Subheading>
-                {room.treasure[4]}
+                <Subheading>Treasure: {'\n'}</Subheading>
+                {room.treasure.displayValue}
             </CardParagraph>
         );
     };
@@ -61,8 +66,8 @@ export const RoomSection = ({ navigation, room, deleteFunc }) => {
     const DeviceView = () => {
         return (
             <CardParagraph>
-                <Subheading>Device: </Subheading>
-                {room.device[4]}
+                <Subheading>Device: {'\n'}</Subheading>
+                {room.device.displayValue}
             </CardParagraph>
         );
     };
@@ -73,33 +78,33 @@ export const RoomSection = ({ navigation, room, deleteFunc }) => {
 
     return (
         <CardContainer>
-            <GeneratorCardTitle title={room.place[4]} />
+            <GeneratorCardTitle title={room.place.displayValue} />
             <Card.Content>
                 <CardParagraph>
-                    <Subheading>Stocking: </Subheading>
-                    {room.stocking[4]}
+                    <Subheading>Stocking: {'\n'}</Subheading>
+                    {room.stocking.displayValue}
                 </CardParagraph>
                 <CardParagraph>
-                    <Subheading>Atmosphere: </Subheading>
-                    {room.atmosphere[4]}
+                    <Subheading>Atmosphere: {'\n'}</Subheading>
+                    {room.atmosphere.displayValue}
                 </CardParagraph>
                 <CardParagraph>
-                    <Subheading>Ornamentations: </Subheading>
-                    {room.ornamentation[4]}
+                    <Subheading>Ornamentations: {'\n'}</Subheading>
+                    {room.ornamentation.displayValue}
                 </CardParagraph>
                 <CardParagraph>
-                    <Subheading>Large Items: </Subheading>
-                    {room.largeItem[4]}
+                    <Subheading>Large Items: {'\n'}</Subheading>
+                    {room.largeItem.displayValue}
                 </CardParagraph>
                 <CardParagraph>
-                    <Subheading>Small Items: </Subheading>
-                    {room.smallItem[4]}
+                    <Subheading>Small Items: {'\n'}</Subheading>
+                    {room.smallItem.displayValue}
                 </CardParagraph>
-                {room.neutralInhabitant[4] || room.dangerousInhabitant[4] !== '' ? <InhabitantView /> : <BlankView />}
-                {room.inhabitantReaction[4] !== '' ? <InhabitantReactionView /> : <BlankView />}
-                {room.trap[4] !== '' ? <TrapView /> : <BlankView />}
-                {room.treasure[4] !== '' ? <TreasureView /> : <BlankView />}
-                {room.device[4] !== '' ? <DeviceView /> : <BlankView />}
+                {room.neutralInhabitant.isAssigned || room.dangerousInhabitant.isAssigned ? <InhabitantView /> : <BlankView />}
+                {room.inhabitantReaction.isAssigned ? <InhabitantReactionView /> : <BlankView />}
+                {room.trap.isAssigned ? <TrapView /> : <BlankView />}
+                {room.treasure.isAssigned ? <TreasureView /> : <BlankView />}
+                {room.device.isAssigned ? <DeviceView /> : <BlankView />}
                 <ButtonSection>
                     <Button
                         mode="text"
@@ -110,7 +115,8 @@ export const RoomSection = ({ navigation, room, deleteFunc }) => {
                         onPress={() => {
                             navigation.navigate('RoomGenerator', {
                                 room: room,
-                                editing: true,
+                                navigatingFrom: 'RoomList',
+                                action: 'Edit',
                             });
                         }}
                     >
@@ -123,14 +129,35 @@ export const RoomSection = ({ navigation, room, deleteFunc }) => {
                         icon="delete-forever"
                         color="#28587B"
                         onPress={() => {
-                            deleteFunc(room);
+                            showDialog();
                         }}
                     >
                         Delete
                     </Button>
                 </ButtonSection>
             </Card.Content>
-            <Card.Actions></Card.Actions>
+            <Portal>
+                <Dialog visible={dialogVisible} onDismiss={hideDialog}>
+                    <Dialog.Title>Confirm Delete!</Dialog.Title>
+                    <Dialog.Content>
+                        <Paragraph>Are you sure you want to delete this room?</Paragraph>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={hideDialog} color="#28587B">
+                            Cancel
+                        </Button>
+                        <Button
+                            color="#28587B"
+                            onPress={() => {
+                                deleteFunc(room);
+                                hideDialog();
+                            }}
+                        >
+                            Confirm
+                        </Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
         </CardContainer>
     );
 };

@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { useState } from 'react';
 
 import styled from 'styled-components/native';
 
-import { Card, Paragraph, Button, Subheading } from 'react-native-paper';
+import { Card, Paragraph, Button, Subheading, Portal, Dialog } from 'react-native-paper';
 
 const CardContainer = styled(Card)`
     background-color: ${(props) => props.theme.colours.bg.primary};
@@ -24,6 +25,11 @@ const ButtonSection = styled.View`
 `;
 
 export const GameSection = ({ navigation, game, deleteFunc }) => {
+    const [dialogVisible, setDialogVisible] = useState(false);
+
+    const showDialog = () => setDialogVisible(true);
+    const hideDialog = () => setDialogVisible(false);
+
     return (
         <CardContainer>
             <GeneratorCardTitle title={game.name} />
@@ -34,7 +40,7 @@ export const GameSection = ({ navigation, game, deleteFunc }) => {
                 </CardParagraph>
                 <CardParagraph>
                     <Subheading>Number of rooms: </Subheading>
-                    {game.roomCount}
+                    {game.rooms ? game.rooms.length : '0'}
                 </CardParagraph>
                 <ButtonSection>
                     <Button
@@ -44,10 +50,14 @@ export const GameSection = ({ navigation, game, deleteFunc }) => {
                         icon="shape-square-plus"
                         color="#28587B"
                         onPress={() => {
-                            navigation.navigate('RoomList');
+                            navigation.navigate('RoomList', {
+                                game: game,
+                                navigatingFrom: 'GameList',
+                                action: 'Edit',
+                            });
                         }}
                     >
-                        Add Rooms
+                        {game.rooms && game.rooms.length == 0 ? 'Add Rooms' : 'Edit Rooms'}
                     </Button>
                     <Button
                         mode="text"
@@ -58,7 +68,8 @@ export const GameSection = ({ navigation, game, deleteFunc }) => {
                         onPress={() => {
                             navigation.navigate('CreateGame', {
                                 game: game,
-                                editing: true,
+                                navigatingFrom: 'GameList',
+                                action: 'Edit',
                             });
                         }}
                     >
@@ -71,14 +82,35 @@ export const GameSection = ({ navigation, game, deleteFunc }) => {
                         icon="delete-forever"
                         color="#28587B"
                         onPress={() => {
-                            deleteFunc(game);
+                            showDialog();
                         }}
                     >
                         Delete
                     </Button>
                 </ButtonSection>
             </Card.Content>
-            <Card.Actions></Card.Actions>
+            <Portal>
+                <Dialog visible={dialogVisible} onDismiss={hideDialog}>
+                    <Dialog.Title>Confirm Delete!</Dialog.Title>
+                    <Dialog.Content>
+                        <Paragraph>Are you sure you want to delete this game?</Paragraph>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={hideDialog} color="#28587B">
+                            Cancel
+                        </Button>
+                        <Button
+                            color="#28587B"
+                            onPress={() => {
+                                deleteFunc(game);
+                                hideDialog();
+                            }}
+                        >
+                            Confirm
+                        </Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
         </CardContainer>
     );
 };
