@@ -21,6 +21,9 @@ import {
     getTreasure_3,
 } from '../services/DataService';
 
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
+
 //#region Styles
 
 const GeneratorContainer = styled.View`
@@ -56,6 +59,8 @@ export const Generator_3 = ({ navigation, route }) => {
     const [value_2, setValue_2] = useState('');
     const [value_3, setValue_3] = useState('');
     const [isSave, setIsSave] = useState(false);
+    const [isEditingLocation, setIsEditingLocation] = useState(false);
+    const [editingGuid, setEditingGuid] = useState('');
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -81,10 +86,17 @@ export const Generator_3 = ({ navigation, route }) => {
                     icon="keyboard-backspace"
                     uppercase="false"
                     onPress={() => {
-                        navigation.navigate('RoomGenerator', {
-                            navigatingFrom: 'Generator',
-                            action: 'Cancel',
-                        });
+                        if (route.params.navigatingFrom === 'RoomGenerator') {
+                            navigation.navigate('RoomGenerator', {
+                                navigatingFrom: 'Generator',
+                                action: 'Cancel',
+                            });
+                        } else if (route.params.navigatingFrom === 'LocationList') {
+                            navigation.navigate('LocationList', {
+                                navigatingFrom: 'Generator',
+                                action: 'Cancel',
+                            });
+                        }
                     }}
                 >
                     Cancel
@@ -94,9 +106,22 @@ export const Generator_3 = ({ navigation, route }) => {
     }, [navigation]);
 
     useEffect(() => {
-        setValue_1(route.params.roomObject.generatedValue_1);
-        setValue_2(route.params.roomObject.generatedValue_2);
-        setValue_3(route.params.roomObject.generatedValue_3);
+        if (route.params.navigatingFrom === 'LocationList' && route.params.action == 'Edit') {
+            setIsEditingLocation(true);
+            setEditingGuid(route.params.location.locationId);
+        }
+    });
+
+    useEffect(() => {
+        if (route.params.navigatingFrom === 'RoomGenerator') {
+            setValue_1(route.params.roomObject.generatedValue_1);
+            setValue_2(route.params.roomObject.generatedValue_2);
+            setValue_3(route.params.roomObject.generatedValue_3);
+        } else if (route.params.navigatingFrom === 'LocationList' && route.params.action === 'Edit') {
+            setValue_1(route.params.location.locationObject.generatedValue_1);
+            setValue_2(route.params.location.locationObject.generatedValue_2);
+            setValue_3(route.params.location.locationObject.generatedValue_3);
+        }
     }, [route.params]);
 
     useEffect(() => {
@@ -115,19 +140,39 @@ export const Generator_3 = ({ navigation, route }) => {
                 concatValue = `The treasure in the room is a: ${value_1}, ${value_2}, ${value_3}`;
             }
 
-            navigation.navigate('RoomGenerator', {
-                navigatingFrom: 'Generator',
-                action: 'Save',
-                type: route.params.type,
-                roomObject: {
-                    generatedValue_1: value_1,
-                    generatedValue_2: value_2,
-                    generatedValue_3: value_3,
-                    generatedValue_4: '',
-                    displayValue: concatValue,
-                    isAssigned: true,
-                },
-            });
+            if (route.params.navigatingFrom === 'RoomGenerator') {
+                navigation.navigate('RoomGenerator', {
+                    navigatingFrom: 'Generator',
+                    action: 'Save',
+                    type: route.params.type,
+                    roomObject: {
+                        generatedValue_1: value_1,
+                        generatedValue_2: value_2,
+                        generatedValue_3: value_3,
+                        generatedValue_4: '',
+                        displayValue: concatValue,
+                        isAssigned: true,
+                    },
+                });
+            } else if (route.params.navigatingFrom === 'LocationList') {
+                navigation.navigate('LocationList', {
+                    navigatingFrom: 'Generator',
+                    action: 'Save',
+                    type: route.params.type,
+                    location: {
+                        locationObject: {
+                            generatedValue_1: value_1,
+                            generatedValue_2: value_2,
+                            generatedValue_3: value_3,
+                            generatedValue_4: '',
+                            displayValue: concatValue,
+                            isAssigned: true,
+                        },
+                        locationId: !isEditingLocation ? uuidv4() : editingGuid,
+                        rooms: [],
+                    },
+                });
+            }
         }
     }, [isSave]);
 

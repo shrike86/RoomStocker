@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { GameList } from '../screens/GameList';
 import { CreateGame } from '../screens/CreateGame';
 import { RoomList } from '../screens/RoomList';
+import { LocationList } from '../screens/LocationList';
 import { RoomGenerator } from '../screens/RoomGenerator';
 import { Generator_1 } from '../screens/Generator_1';
 import { Generator_2 } from '../screens/Generator_2';
@@ -25,7 +26,15 @@ export const MainStackNavigator = ({ navigation, route }) => {
                     title: 'Games',
                     headerTintColor: '#fff',
                     headerStyle: { backgroundColor: '#28587B' },
-                    headerBackTitle: 'Cancel',
+                })}
+            />
+            <Stack.Screen
+                name="LocationList"
+                component={LocationList}
+                options={() => ({
+                    title: 'Locations',
+                    headerTintColor: '#fff',
+                    headerStyle: { backgroundColor: '#28587B' },
                 })}
             />
             <Stack.Screen
@@ -35,7 +44,6 @@ export const MainStackNavigator = ({ navigation, route }) => {
                     title: 'Create',
                     headerTintColor: '#fff',
                     headerStyle: { backgroundColor: '#28587B' },
-                    headerBackTitle: 'Cancel',
                 })}
             />
             <Stack.Screen

@@ -4,6 +4,7 @@ import { ThemeProvider } from 'styled-components/native';
 import { theme } from './src/infrastructure/theme/index';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { LogBox } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { AboutStackNavigator } from './src/components/AboutStackNavigator';
@@ -36,6 +37,7 @@ const App = () => {
         <PaperProvider>
             <ThemeProvider theme={theme}>
                 <NavigationContainer>
+                    <StatusBar style="light" />
                     <Tab.Navigator
                         initialRouteName="GameList"
                         screenOptions={({ route }) => ({

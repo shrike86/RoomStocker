@@ -15,7 +15,7 @@ const Container = styled.SafeAreaView`
 export const RoomList = ({ navigation, route }) => {
     const [rooms, setRooms] = useState([]);
     const [isSave, setIsSave] = useState(false);
-    const [currentGame, setCurrentGame] = useState({});
+    const [currentLocation, setCurrentLocation] = useState({});
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -84,8 +84,8 @@ export const RoomList = ({ navigation, route }) => {
 
     useEffect(() => {
         if (isSave) {
-            navigation.navigate('GameList', {
-                game: currentGame,
+            navigation.navigate('LocationList', {
+                location: currentLocation,
                 rooms: rooms,
                 navigatingFrom: 'RoomList',
                 action: 'Save',
@@ -95,9 +95,9 @@ export const RoomList = ({ navigation, route }) => {
 
     // when navigating from the game list, save the current game and populate rooms based on the games rooms.
     useEffect(() => {
-        if (route.params.navigatingFrom == 'GameList' && route.params.action == 'Edit') {
-            setCurrentGame(route.params.game);
-            setRooms([...route.params.game.rooms]);
+        if (route.params.navigatingFrom == 'LocationList' && route.params.action == 'Edit') {
+            setCurrentLocation(route.params.location);
+            setRooms([...route.params.location.rooms]);
         }
     }, [route.params]);
 

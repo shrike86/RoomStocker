@@ -73,10 +73,6 @@ export const RoomGenerator = ({ navigation, route }) => {
     // Default room sections.
     const [generatorCards, setGeneratorCards] = useState([
         {
-            title: 'Room Location',
-            data: ['Place'],
-        },
-        {
             title: 'Room Stocking',
             data: ['Basic Room Stocking', 'Room Atmosphere', 'Prominent Room Ornamentations', 'Large Items', 'Small Items'],
         },
@@ -91,8 +87,6 @@ export const RoomGenerator = ({ navigation, route }) => {
         displayValue: '',
         isAssigned: false,
     };
-
-    const [placeObject, setPlaceObject] = useState(defaultObj);
 
     const [stockingObject, setStockingObject] = useState(defaultObj);
 
@@ -122,9 +116,6 @@ export const RoomGenerator = ({ navigation, route }) => {
 
     const setRoomObject = (type, newRoomObject) => {
         switch (type) {
-            case 'Place':
-                setPlaceObject(newRoomObject);
-                break;
             case 'Basic Room Stocking':
                 setStockingObject(newRoomObject);
                 addCardsBasedOnRoomState(setGeneratorCards, newRoomObject.displayValue);
@@ -164,8 +155,6 @@ export const RoomGenerator = ({ navigation, route }) => {
 
     const getRoomObject = (type) => {
         switch (type) {
-            case 'Place':
-                return placeObject;
             case 'Basic Room Stocking':
                 return stockingObject;
             case 'Room Atmosphere':
@@ -211,7 +200,6 @@ export const RoomGenerator = ({ navigation, route }) => {
             navigation.navigate('RoomList', {
                 room: {
                     roomId: !isEditingRoom ? uuidv4() : editingGuid,
-                    place: placeObject,
                     stocking: stockingObject,
                     atmosphere: atmosphereObject,
                     ornamentation: ornamentationsObject,
@@ -258,10 +246,6 @@ export const RoomGenerator = ({ navigation, route }) => {
             // This is the default section state.
             const newCards = [
                 {
-                    title: 'Room Location',
-                    data: ['Place'],
-                },
-                {
                     title: 'Room Stocking',
                     data: ['Basic Room Stocking', 'Room Atmosphere', 'Prominent Room Ornamentations', 'Large Items', 'Small Items'],
                 },
@@ -270,35 +254,34 @@ export const RoomGenerator = ({ navigation, route }) => {
             // Add cards based on the route params values.
             if (route.params.room.neutralInhabitant.isAssigned || route.params.room.dangerousInhabitant.isAssigned) {
                 if (route.params.room.neutralInhabitant.isAssigned) {
-                    newCards[1].data.push('Neutral Inhabitant');
+                    newCards[0].data.push('Neutral Inhabitant');
                 } else if (route.params.room.dangerousInhabitant.isAssigned) {
-                    newCards[1].data.push('Dangerous Inhabitant');
+                    newCards[0].data.push('Dangerous Inhabitant');
                 }
 
-                newCards[1].data.push('Inhabitant Reaction to Interlopers');
+                newCards[0].data.push('Inhabitant Reaction to Interlopers');
 
                 if (route.params.room.trap.isAssigned) {
-                    newCards[1].data.push('Traps');
+                    newCards[0].data.push('Traps');
                 } else if (route.params.room.treasure.isAssigned) {
-                    newCards[1].data.push('Treasure');
+                    newCards[0].data.push('Treasure');
                 } else if (route.params.room.device.isAssigned) {
-                    newCards[1].data.push('Device');
+                    newCards[0].data.push('Device');
                 }
 
                 setGeneratorCards([...newCards]);
             } else if (route.params.room.trap.isAssigned) {
-                newCards[1].data.push('Traps');
+                newCards[0].data.push('Traps');
                 setGeneratorCards([...newCards]);
             } else if (route.params.room.treasure.isAssigned) {
-                newCards[1].data.push('Treasure');
+                newCards[0].data.push('Treasure');
                 setGeneratorCards([...newCards]);
             } else if (route.params.room.device.isAssigned) {
-                newCards[1].data.push('Device');
+                newCards[0].data.push('Device');
                 setGeneratorCards([...newCards]);
             }
 
             // Update cards based on route params.
-            setPlaceObject(route.params.room.place);
             setStockingObject(route.params.room.stocking);
             setAtmosphereObject(route.params.room.atmosphere);
             setOrnamentationsObject(route.params.room.ornamentation);

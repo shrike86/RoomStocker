@@ -24,82 +24,86 @@ const GeneratorSectionButton = styled(Button)`
 export const GeneratorSection = ({ navigation, generatorTitle, type, getRoomObject, setResetStocking }) => {
     const assignGenerator = () => {
         switch (type) {
-            case 'Place':
-                navigation.navigate('Generator_3', {
-                    type: type,
-                    roomObject: getRoomObject,
-                });
-                break;
             case 'Basic Room Stocking':
                 navigation.navigate('Generator_1', {
                     type: type,
                     roomObject: getRoomObject,
                     setResetStocking: setResetStocking,
+                    navigatingFrom: 'RoomGenerator',
                 });
                 break;
             case 'Room Atmosphere':
                 navigation.navigate('Generator_1', {
                     type: type,
                     roomObject: getRoomObject,
+                    navigatingFrom: 'RoomGenerator',
                 });
                 break;
             case 'Prominent Room Ornamentations':
                 navigation.navigate('Generator_3', {
                     type: type,
                     roomObject: getRoomObject,
+                    navigatingFrom: 'RoomGenerator',
                 });
                 break;
             case 'Neutral Inhabitant':
                 navigation.navigate('Generator_3', {
                     type: type,
                     roomObject: getRoomObject,
+                    navigatingFrom: 'RoomGenerator',
                 });
                 break;
             case 'Dangerous Inhabitant':
                 navigation.navigate('Generator_4', {
                     type: type,
                     roomObject: getRoomObject,
+                    navigatingFrom: 'RoomGenerator',
                 });
                 break;
             case 'Inhabitant Reaction to Interlopers':
                 navigation.navigate('Generator_2', {
                     type: type,
                     roomObject: getRoomObject,
+                    navigatingFrom: 'RoomGenerator',
                 });
                 break;
             case 'Traps':
                 navigation.navigate('Generator_3', {
                     type: type,
                     roomObject: getRoomObject,
+                    navigatingFrom: 'RoomGenerator',
                 });
                 break;
             case 'Treasure':
                 navigation.navigate('Generator_3', {
                     type: type,
                     roomObject: getRoomObject,
+                    navigatingFrom: 'RoomGenerator',
                 });
                 break;
             case 'Device':
                 navigation.navigate('Generator_2', {
                     type: type,
                     roomObject: getRoomObject,
+                    navigatingFrom: 'RoomGenerator',
                 });
                 break;
             case 'Large Items':
                 navigation.navigate('Generator_1', {
                     type: type,
                     roomObject: getRoomObject,
+                    navigatingFrom: 'RoomGenerator',
                 });
                 break;
             case 'Small Items':
                 navigation.navigate('Generator_1', {
                     type: type,
                     roomObject: getRoomObject,
+                    navigatingFrom: 'RoomGenerator',
                 });
                 break;
         }
     };
-
     return (
         <GeneratorCardContainer>
             <GeneratorCardTitle title={generatorTitle} />

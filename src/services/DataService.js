@@ -1441,6 +1441,25 @@ const deviceOnly = [
     'Device used in regular work of environment, mundane but effective.',
     'Device with obscure, secret use that belies a shad-ow use of environment.',
 ];
+
+const empty = [
+    'Empty, place of rest.',
+    'Empty, place of recreation.',
+    'Empty, place of physical work.',
+    'Empty, place of physical storage.',
+    'Empty, place of sleep.',
+    'Empty, place of ornamentation.',
+    'Empty, place of ritual and worship.',
+    'Empty, place of waste disposal.',
+    'Empty, place of eating.',
+    'Empty, place of lavatory.',
+    'Empty, place of mental work and research.',
+    'Empty, place of mental storage.',
+    'Empty, place of bathing.',
+    'Empty, place of mechanics and machinery.',
+    'Empty, place of growing.',
+    'Empty, place of secrets.',
+];
 //#endregion
 
 const assignInhabitantBehaviour = () => {
@@ -1537,42 +1556,40 @@ module.exports = {
         // This is the default section state.
         const newCards = [
             {
-                title: 'Room Location',
-                data: ['Place'],
-            },
-            {
                 title: 'Room Stocking',
                 data: ['Basic Room Stocking', 'Room Atmosphere', 'Prominent Room Ornamentations', 'Large Items', 'Small Items'],
             },
         ];
         // Add the relevant new sections depending on the value of room stocking.
         if (inhabitedOnlyValues.includes(generatedValue)) {
-            newCards[1].data.push(assignInhabitantBehaviour());
-            newCards[1].data.push('Inhabitant Reaction to Interlopers');
+            newCards[0].data.push(assignInhabitantBehaviour());
+            newCards[0].data.push('Inhabitant Reaction to Interlopers');
             setCards([...newCards]);
         } else if (inhabitedWithTrap.includes(generatedValue)) {
-            newCards[1].data.push(assignInhabitantBehaviour());
-            newCards[1].data.push('Inhabitant Reaction to Interlopers');
-            newCards[1].data.push('Traps');
+            newCards[0].data.push(assignInhabitantBehaviour());
+            newCards[0].data.push('Inhabitant Reaction to Interlopers');
+            newCards[0].data.push('Traps');
             setCards([...newCards]);
         } else if (inhabitedWithTreasure.includes(generatedValue)) {
-            newCards[1].data.push(assignInhabitantBehaviour());
-            newCards[1].data.push('Inhabitant Reaction to Interlopers');
-            newCards[1].data.push('Treasure');
+            newCards[0].data.push(assignInhabitantBehaviour());
+            newCards[0].data.push('Inhabitant Reaction to Interlopers');
+            newCards[0].data.push('Treasure');
             setCards([...newCards]);
         } else if (inhabitedWithDevice.includes(generatedValue)) {
-            newCards[1].data.push(assignInhabitantBehaviour());
-            newCards[1].data.push('Inhabitant Reaction to Interlopers');
-            newCards[1].data.push('Device');
+            newCards[0].data.push(assignInhabitantBehaviour());
+            newCards[0].data.push('Inhabitant Reaction to Interlopers');
+            newCards[0].data.push('Device');
             setCards([...newCards]);
         } else if (trapOnly.includes(generatedValue)) {
-            newCards[1].data.push('Traps');
+            newCards[0].data.push('Traps');
             setCards([...newCards]);
         } else if (treasureOnly.includes(generatedValue)) {
-            newCards[1].data.push('Treasure');
+            newCards[0].data.push('Treasure');
             setCards([...newCards]);
         } else if (deviceOnly.includes(generatedValue)) {
-            newCards[1].data.push('Device');
+            newCards[0].data.push('Device');
+            setCards([...newCards]);
+        } else if (empty.includes(generatedValue)) {
             setCards([...newCards]);
         }
     },

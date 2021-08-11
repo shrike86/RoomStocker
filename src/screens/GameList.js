@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useState, useEffect } from 'react';
 import { FlatList } from 'react-native';
@@ -14,6 +15,8 @@ const Container = styled.SafeAreaView`
 
 export const GameList = ({ navigation, route }) => {
     const [games, setGames] = useState([]);
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+    const [saveToStorage, setSaveToStorage] = useState(false);
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -43,11 +46,11 @@ export const GameList = ({ navigation, route }) => {
         setGames(tempGames);
     };
 
-    const updateGames = (game, rooms) => {
+    const updateGames = (game, locations) => {
         for (let index in games) {
             if (games[index] !== undefined && games[index].gameId === game.gameId) {
-                if (rooms) {
-                    games[index].rooms = rooms;
+                if (locations) {
+                    games[index].locations = locations;
                 } else {
                     games[index] = game;
                 }
@@ -62,19 +65,53 @@ export const GameList = ({ navigation, route }) => {
             if (games[index] !== undefined && games[index].gameId === game.gameId) {
                 games.splice(index, 1);
                 setGames([...games]);
+                setSaveToStorage(true);
             }
         }
     };
+
+    const saveGamesToStorage = async (value) => {
+        try {
+            let json = JSON.stringify(value);
+            //console.log('Save to storage: ' + json);
+            await AsyncStorage.setItem('stockerKey', json);
+            setSaveToStorage(false);
+        } catch (e) {}
+    };
+
+    const loadGamesFromStorage = async () => {
+        try {
+            const jsonValue = await AsyncStorage.getItem('stockerKey');
+            const returnValue = jsonValue != null ? JSON.parse(jsonValue) : null;
+            //console.log('Loaded from storage: ' + returnValue);
+            setGames(returnValue);
+        } catch (e) {
+            // error reading value
+        }
+    };
+
+    useEffect(() => {
+        if (!isDataLoaded) {
+            loadGamesFromStorage();
+            setIsDataLoaded(true);
+        }
+    }, [isDataLoaded]);
 
     const GameItem = ({ game, navigation }) => <GameSection game={game} navigation={navigation} deleteFunc={deleteGame} />;
 
     const renderItem = ({ item }) => <GameItem game={item} navigation={navigation} />;
 
     useEffect(() => {
+        if (saveToStorage) {
+            saveGamesToStorage(games);
+        }
+    }, [saveToStorage]);
+
+    useEffect(() => {
         if (route.params) {
-            if (route.params.navigatingFrom == 'RoomList' && route.params.action == 'Save') {
-                if (route.params.rooms !== undefined || route.params.rooms !== []) {
-                    updateGames(route.params.game, route.params.rooms);
+            if (route.params.navigatingFrom == 'LocationList' && route.params.action == 'Save') {
+                if (route.params.locations !== undefined || route.params.locations !== []) {
+                    updateGames(route.params.game, route.params.locations);
                 }
             }
 
@@ -83,6 +120,8 @@ export const GameList = ({ navigation, route }) => {
                     createGame(route.params.game);
                 }
             }
+
+            setSaveToStorage(true);
         }
     }, [route.params]);
 

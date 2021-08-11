@@ -78,7 +78,6 @@ export const RoomSection = ({ navigation, room, deleteFunc }) => {
 
     return (
         <CardContainer>
-            <GeneratorCardTitle title={room.place.displayValue} />
             <Card.Content>
                 <CardParagraph>
                     <Subheading>Stocking: {'\n'}</Subheading>

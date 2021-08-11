@@ -34,7 +34,7 @@ export const CreateGame = ({ navigation, route }) => {
                                 gameId: !isEditingGame ? uuidv4() : editingGuid,
                                 name: name,
                                 description: description,
-                                rooms: [],
+                                locations: [],
                             },
                             navigatingFrom: 'CreateGame',
                             action: 'Save',
