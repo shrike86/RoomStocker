@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import styled from 'styled-components/native';
 
-import { Card, Paragraph, Button, Subheading, Portal, Dialog } from 'react-native-paper';
+import { Card, Paragraph, Button, Subheading, Portal, Dialog, Title } from 'react-native-paper';
 
 const CardContainer = styled(Card)`
     background-color: ${(props) => props.theme.colours.bg.primary};
@@ -24,6 +24,12 @@ const ButtonSection = styled.View`
     margin-top: ${(props) => props.theme.space[3]};
 `;
 
+const CardTitleRow = styled.View`
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-top: ${(props) => props.theme.space[3]};
+`;
+
 export const GameSection = ({ navigation, game, deleteFunc }) => {
     const [dialogVisible, setDialogVisible] = useState(false);
 
@@ -34,11 +40,12 @@ export const GameSection = ({ navigation, game, deleteFunc }) => {
         <CardContainer>
             <GeneratorCardTitle title={game.name} />
             <Card.Content>
-                <CardParagraph>{game.description}</CardParagraph>
-                <CardParagraph>
-                    <Subheading>Number of Locations: </Subheading>
-                    {game.locations ? game.locations.length : '0'}
-                </CardParagraph>
+                <CardParagraph>Description: {game.description}</CardParagraph>
+                <CardParagraph>Number of Locations: {game.locations ? game.locations.length : '0'}</CardParagraph>
+                <CardTitleRow>
+                    <Title>Notes</Title>
+                </CardTitleRow>
+                <CardParagraph>{game.notes}</CardParagraph>
                 <ButtonSection>
                     <Button
                         mode="text"

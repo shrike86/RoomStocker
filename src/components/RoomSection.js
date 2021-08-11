@@ -1,28 +1,35 @@
 import * as React from 'react';
 import styled from 'styled-components/native';
 import { useState } from 'react';
-import { Card, Paragraph, Button, Subheading, Portal, Dialog } from 'react-native-paper';
+import { Card, Paragraph, Button, Subheading, Portal, Dialog, Title } from 'react-native-paper';
 
 const CardContainer = styled(Card)`
     background-color: ${(props) => props.theme.colours.bg.primary};
     margin: ${(props) => props.theme.space[3]};
 `;
 
-const GeneratorCardTitle = styled(Card.Title)`
-    font-size: ${(props) => props.theme.lineHeights.title};
-`;
-
 const CardParagraph = styled(Paragraph)`
     margin-top: ${(props) => props.theme.space[2]};
+    margin-bottom: ${(props) => props.theme.space[2]};
+`;
+
+const CardTitleRow = styled.View`
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-bottom: ${(props) => props.theme.space[2]};
+`;
+
+const CardTitleButton = styled(Button)`
+    margin-left: ${(props) => props.theme.space[2]};
 `;
 
 const ButtonSection = styled.View`
     flex-direction: row;
     justify-content: flex-end;
-    margin-top: ${(props) => props.theme.space[3]};
+    margin-top: ${(props) => props.theme.space[4]};
 `;
 
-export const RoomSection = ({ navigation, room, deleteFunc }) => {
+export const RoomSection = ({ navigation, room, deleteFunc, updateNameFunc }) => {
     const [dialogVisible, setDialogVisible] = useState(false);
     const showDialog = () => setDialogVisible(true);
     const hideDialog = () => setDialogVisible(false);
@@ -79,6 +86,26 @@ export const RoomSection = ({ navigation, room, deleteFunc }) => {
     return (
         <CardContainer>
             <Card.Content>
+                <CardTitleRow>
+                    <Title>{room.name}</Title>
+                    <CardTitleButton
+                        mode="text"
+                        dark="false"
+                        color="#fff"
+                        icon="square-edit-outline"
+                        color="#28587B"
+                        onPress={() => {
+                            navigation.navigate('ChangeLocationName', {
+                                room: room,
+                                navigatingFrom: 'RoomList',
+                                action: 'Edit',
+                                updateNameFunc: updateNameFunc,
+                            });
+                        }}
+                    >
+                        Change
+                    </CardTitleButton>
+                </CardTitleRow>
                 <CardParagraph>
                     <Subheading>Stocking: {'\n'}</Subheading>
                     {room.stocking.displayValue}
@@ -104,6 +131,26 @@ export const RoomSection = ({ navigation, room, deleteFunc }) => {
                 {room.trap.isAssigned ? <TrapView /> : <BlankView />}
                 {room.treasure.isAssigned ? <TreasureView /> : <BlankView />}
                 {room.device.isAssigned ? <DeviceView /> : <BlankView />}
+                <CardTitleRow>
+                    <Title>Notes</Title>
+                    <CardTitleButton
+                        mode="text"
+                        dark="false"
+                        color="#fff"
+                        icon="square-edit-outline"
+                        color="#28587B"
+                        onPress={() => {
+                            navigation.navigate('CreateNoteForm', {
+                                room: room,
+                                navigatingFrom: 'RoomList',
+                                action: 'Edit',
+                            });
+                        }}
+                    >
+                        {room.notes === '' ? 'Add' : 'Change'}
+                    </CardTitleButton>
+                </CardTitleRow>
+                <CardParagraph>{room.notes}</CardParagraph>
                 <ButtonSection>
                     <Button
                         mode="text"

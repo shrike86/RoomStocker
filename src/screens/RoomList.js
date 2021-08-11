@@ -55,6 +55,7 @@ export const RoomList = ({ navigation, route }) => {
 
     const createRoom = (room) => {
         let tempRooms = [...rooms];
+        room.name = 'Room ' + ++rooms.length;
         tempRooms.push(room);
         setRooms(tempRooms);
     };
@@ -78,7 +79,29 @@ export const RoomList = ({ navigation, route }) => {
         }
     };
 
-    const RoomItem = ({ room, navigation }) => <RoomSection room={room} navigation={navigation} deleteFunc={deleteRoom} />;
+    const updateRoomName = (room, newName) => {
+        for (let index in rooms) {
+            if (rooms[index] !== undefined && rooms[index].roomId === room.roomId) {
+                let newRoom = rooms[index];
+                newRoom.name = newName;
+                rooms[index] = newRoom;
+                setRooms([...rooms]);
+            }
+        }
+    };
+
+    const updateRoomNote = (room, note) => {
+        for (let index in rooms) {
+            if (rooms[index] !== undefined && rooms[index].roomId === room.roomId) {
+                let newRoom = rooms[index];
+                newRoom.notes = note;
+                rooms[index] = newRoom;
+                setRooms([...rooms]);
+            }
+        }
+    };
+
+    const RoomItem = ({ room, navigation }) => <RoomSection room={room} navigation={navigation} deleteFunc={deleteRoom} updateNameFunc={updateRoomName} />;
 
     const renderItem = ({ item }) => <RoomItem room={item} navigation={navigation} />;
 
@@ -98,17 +121,14 @@ export const RoomList = ({ navigation, route }) => {
         if (route.params.navigatingFrom == 'LocationList' && route.params.action == 'Edit') {
             setCurrentLocation(route.params.location);
             setRooms([...route.params.location.rooms]);
-        }
-    }, [route.params]);
-
-    // Create/update room after being navigated from the room generator.
-    useEffect(() => {
-        if (route.params.navigatingFrom == 'RoomGenerator' && route.params.action == 'Save') {
+        } else if (route.params.navigatingFrom == 'RoomGenerator' && route.params.action == 'Save') {
             if (!updateRoom(route.params.room)) {
                 createRoom(route.params.room);
             }
+        } else if (route.params.navigatingFrom == 'CreateNoteForm' && route.params.action == 'Save') {
+            updateRoomNote(route.params.room, route.params.note);
         }
-    }, [route.params.room]);
+    }, [route.params]);
 
     return (
         <Container>

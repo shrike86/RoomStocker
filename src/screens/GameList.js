@@ -81,10 +81,10 @@ export const GameList = ({ navigation, route }) => {
 
     const loadGamesFromStorage = async () => {
         try {
-            const jsonValue = await AsyncStorage.getItem('stockerKey');
-            const returnValue = jsonValue != null ? JSON.parse(jsonValue) : null;
+            const value = await AsyncStorage.getItem('stockerKey');
+            const json = JSON.parse(value);
             //console.log('Loaded from storage: ' + returnValue);
-            setGames(returnValue);
+            setGames(json);
         } catch (e) {
             // error reading value
         }

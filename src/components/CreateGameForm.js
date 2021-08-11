@@ -9,10 +9,10 @@ const FormContainer = styled.View`
     padding-left: ${(props) => props.theme.space[3]};
 `;
 
-export const CreateGameForm = ({ name, setName, description, setDescription }) => {
+export const CreateGameForm = ({ name, setName, description, setDescription, notes, setNotes }) => {
     return (
         <FormContainer>
-            <TextInput label="Name" mode="outlined" theme={{ colors: { primary: '#28587B' } }} value={name} onChangeText={(name) => setName(name)}></TextInput>
+            <TextInput label="Name" mode="outlined" theme={{ colors: { primary: '#28587B' } }} value={name} onChangeText={(newName) => setName(newName)}></TextInput>
             <TextInput
                 label="Description"
                 mode="outlined"
@@ -20,6 +20,14 @@ export const CreateGameForm = ({ name, setName, description, setDescription }) =
                 theme={{ colors: { primary: '#28587B' } }}
                 value={description}
                 onChangeText={(description) => setDescription(description)}
+            ></TextInput>
+            <TextInput
+                label="Notes"
+                mode="outlined"
+                multiline={true}
+                theme={{ colors: { primary: '#28587B' } }}
+                value={notes}
+                onChangeText={(newNote) => setNotes(newNote)}
             ></TextInput>
         </FormContainer>
     );

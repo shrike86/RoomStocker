@@ -170,6 +170,7 @@ export const Generator_3 = ({ navigation, route }) => {
                         },
                         locationId: !isEditingLocation ? uuidv4() : editingGuid,
                         rooms: [],
+                        notes: '',
                     },
                 });
             }

@@ -16,6 +16,7 @@ const Container = styled.SafeAreaView`
 export const CreateGame = ({ navigation, route }) => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [notes, setNotes] = useState('');
     const [isEditingGame, setIsEditingGame] = useState(false);
     const [editingGuid, setEditingGuid] = useState(false);
 
@@ -35,6 +36,7 @@ export const CreateGame = ({ navigation, route }) => {
                                 name: name,
                                 description: description,
                                 locations: [],
+                                notes: notes,
                             },
                             navigatingFrom: 'CreateGame',
                             action: 'Save',
@@ -71,6 +73,7 @@ export const CreateGame = ({ navigation, route }) => {
             setEditingGuid(route.params.game.gameId);
             setName(route.params.game.name);
             setDescription(route.params.game.description);
+            setNotes(route.params.game.notes);
         } else {
             setIsEditingGame(false);
         }
@@ -78,7 +81,7 @@ export const CreateGame = ({ navigation, route }) => {
 
     return (
         <Container>
-            <CreateGameForm name={name} setName={setName} description={description} setDescription={setDescription} />
+            <CreateGameForm name={name} setName={setName} description={description} setDescription={setDescription} notes={notes} setNotes={setNotes} />
         </Container>
     );
 };

@@ -28,8 +28,6 @@ export const RoomGeneratorTitle = styled(Title)`
 //#endregion
 
 export const RoomGenerator = ({ navigation, route }) => {
-    const [isSave, setIsSave] = useState(false);
-
     React.useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
@@ -66,8 +64,11 @@ export const RoomGenerator = ({ navigation, route }) => {
         });
     }, [navigation]);
 
+    const [isSave, setIsSave] = useState(false);
     const [isEditingRoom, setIsEditingRoom] = useState(false);
     const [editingGuid, setEditingGuid] = useState('');
+    const [editingName, setEditingName] = useState('');
+    const [editingNotes, setEditingNotes] = useState('');
     const [isResetStocking, setIsResetStocking] = useState(false);
 
     // Default room sections.
@@ -199,6 +200,8 @@ export const RoomGenerator = ({ navigation, route }) => {
         if (isSave) {
             navigation.navigate('RoomList', {
                 room: {
+                    name: !isEditingRoom ? '' : editingName,
+                    notes: !isEditingRoom ? '' : editingNotes,
                     roomId: !isEditingRoom ? uuidv4() : editingGuid,
                     stocking: stockingObject,
                     atmosphere: atmosphereObject,
@@ -242,6 +245,8 @@ export const RoomGenerator = ({ navigation, route }) => {
         if (route.params.navigatingFrom === 'RoomList' && route.params.action == 'Edit') {
             setIsEditingRoom(true);
             setEditingGuid(route.params.room.roomId);
+            setEditingName(route.params.room.name);
+            setEditingNotes(route.params.room.notes);
 
             // This is the default section state.
             const newCards = [

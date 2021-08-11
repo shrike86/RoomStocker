@@ -1,13 +1,14 @@
 import * as React from 'react';
 import 'react-native-gesture-handler';
 
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { GameList } from '../screens/GameList';
 import { CreateGame } from '../screens/CreateGame';
 import { RoomList } from '../screens/RoomList';
 import { LocationList } from '../screens/LocationList';
+import { ChangeLocationName } from './ChangeLocationName';
+import { CreateNoteForm } from './CreateNoteForm';
 import { RoomGenerator } from '../screens/RoomGenerator';
 import { Generator_1 } from '../screens/Generator_1';
 import { Generator_2 } from '../screens/Generator_2';
@@ -24,6 +25,7 @@ export const MainStackNavigator = ({ navigation, route }) => {
                 component={GameList}
                 options={() => ({
                     title: 'Games',
+                    headerTitleAlign: 'center',
                     headerTintColor: '#fff',
                     headerStyle: { backgroundColor: '#28587B' },
                 })}
@@ -33,6 +35,7 @@ export const MainStackNavigator = ({ navigation, route }) => {
                 component={LocationList}
                 options={() => ({
                     title: 'Locations',
+                    headerTitleAlign: 'center',
                     headerTintColor: '#fff',
                     headerStyle: { backgroundColor: '#28587B' },
                 })}
@@ -42,6 +45,7 @@ export const MainStackNavigator = ({ navigation, route }) => {
                 component={CreateGame}
                 options={() => ({
                     title: 'Create',
+                    headerTitleAlign: 'center',
                     headerTintColor: '#fff',
                     headerStyle: { backgroundColor: '#28587B' },
                 })}
@@ -51,6 +55,7 @@ export const MainStackNavigator = ({ navigation, route }) => {
                 component={RoomList}
                 options={{
                     title: 'Rooms',
+                    headerTitleAlign: 'center',
                     headerTintColor: '#fff',
                     headerStyle: { backgroundColor: '#28587B' },
                 }}
@@ -60,6 +65,7 @@ export const MainStackNavigator = ({ navigation, route }) => {
                 component={RoomGenerator}
                 options={{
                     title: 'Room',
+                    headerTitleAlign: 'center',
                     headerTintColor: '#fff',
                     headerStyle: { backgroundColor: '#28587B' },
                 }}
@@ -69,6 +75,7 @@ export const MainStackNavigator = ({ navigation, route }) => {
                 component={Generator_1}
                 options={() => ({
                     title: 'Generator',
+                    headerTitleAlign: 'center',
                     headerTintColor: '#fff',
                     headerStyle: { backgroundColor: '#28587B' },
                     headerBackTitle: 'Cancel',
@@ -79,6 +86,7 @@ export const MainStackNavigator = ({ navigation, route }) => {
                 component={Generator_2}
                 options={() => ({
                     title: 'Generator',
+                    headerTitleAlign: 'center',
                     headerTintColor: '#fff',
                     headerStyle: { backgroundColor: '#28587B' },
                     headerBackTitle: 'Cancel',
@@ -89,6 +97,7 @@ export const MainStackNavigator = ({ navigation, route }) => {
                 component={Generator_3}
                 options={() => ({
                     title: 'Generator',
+                    headerTitleAlign: 'center',
                     headerTintColor: '#fff',
                     headerStyle: { backgroundColor: '#28587B' },
                     headerBackTitle: 'Cancel',
@@ -99,6 +108,29 @@ export const MainStackNavigator = ({ navigation, route }) => {
                 component={Generator_4}
                 options={() => ({
                     title: 'Generator',
+                    headerTitleAlign: 'center',
+                    headerTintColor: '#fff',
+                    headerStyle: { backgroundColor: '#28587B' },
+                    headerBackTitle: 'Cancel',
+                })}
+            />
+            <Stack.Screen
+                name="ChangeLocationName"
+                component={ChangeLocationName}
+                options={() => ({
+                    title: 'Name',
+                    headerTitleAlign: 'center',
+                    headerTintColor: '#fff',
+                    headerStyle: { backgroundColor: '#28587B' },
+                    headerBackTitle: 'Cancel',
+                })}
+            />
+            <Stack.Screen
+                name="CreateNoteForm"
+                component={CreateNoteForm}
+                options={() => ({
+                    title: 'Note',
+                    headerTitleAlign: 'center',
                     headerTintColor: '#fff',
                     headerStyle: { backgroundColor: '#28587B' },
                     headerBackTitle: 'Cancel',

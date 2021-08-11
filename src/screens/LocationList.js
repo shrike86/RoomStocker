@@ -15,7 +15,6 @@ const Container = styled.SafeAreaView`
 export const LocationList = ({ navigation, route }) => {
     const [locations, setLocations] = useState([]);
     const [isSave, setIsSave] = useState(false);
-    const [currentLocation, setCurrentLocation] = useState({});
     const [currentGame, setCurrentGame] = useState({});
 
     React.useLayoutEffect(() => {
@@ -92,6 +91,17 @@ export const LocationList = ({ navigation, route }) => {
         }
     };
 
+    const updateLocationNote = (location, note) => {
+        for (let index in locations) {
+            if (locations[index] !== undefined && locations[index].locationId === location.locationId) {
+                let newLocation = locations[index];
+                newLocation.notes = note;
+                locations[index] = newLocation;
+                setLocations([...locations]);
+            }
+        }
+    };
+
     const LocationItem = ({ location, navigation }) => <LocationSection location={location} navigation={navigation} deleteFunc={deleteLocation} />;
 
     const renderItem = ({ item }) => <LocationItem location={item} navigation={navigation} />;
@@ -111,23 +121,16 @@ export const LocationList = ({ navigation, route }) => {
         if (route.params.navigatingFrom == 'GameList' && route.params.action == 'Edit') {
             setCurrentGame(route.params.game);
             setLocations([...route.params.game.locations]);
-        }
-    }, [route.params]);
-
-    useEffect(() => {
-        if (route.params.navigatingFrom == 'RoomList' && route.params.action == 'Save') {
+        } else if (route.params.navigatingFrom == 'RoomList' && route.params.action == 'Save') {
             updateLocationRooms(route.params.location, route.params.rooms);
-        }
-    }, [route.params]);
-
-    // Create/update Location after being navigated from the Location generator.
-    useEffect(() => {
-        if (route.params.navigatingFrom == 'Generator' && route.params.action == 'Save') {
+        } else if (route.params.navigatingFrom == 'Generator' && route.params.action == 'Save') {
             if (!updateLocation(route.params.location)) {
                 createLocation(route.params.location);
             }
+        } else if (route.params.navigatingFrom == 'CreateNoteForm' && route.params.action == 'Save') {
+            updateLocationNote(route.params.location, route.params.note);
         }
-    }, [route.params.location]);
+    }, [route.params]);
 
     return (
         <Container>

@@ -1,13 +1,24 @@
 import React from 'react';
 import { useState } from 'react';
 import styled from 'styled-components/native';
-import { Card, Paragraph, Button, Portal, Dialog, Subheading } from 'react-native-paper';
+import { Card, Paragraph, Button, Portal, Dialog, Subheading, Title } from 'react-native-paper';
 
 //#region Styles
 
 const LocationCardContainer = styled(Card)`
     background-color: ${(props) => props.theme.colours.bg.primary};
     margin: ${(props) => props.theme.space[3]};
+`;
+
+const CardTitleRow = styled.View`
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-top: ${(props) => props.theme.space[3]};
+    margin-bottom: ${(props) => props.theme.space[2]};
+`;
+
+const CardTitleButton = styled(Button)`
+    margin-left: ${(props) => props.theme.space[2]};
 `;
 
 const LocationCardTitle = styled(Card.Title)`
@@ -38,6 +49,26 @@ export const LocationSection = ({ navigation, location, deleteFunc }) => {
                 <CardParagraph>
                     <Subheading>Number of rooms: {location.rooms.length}</Subheading>
                 </CardParagraph>
+                <CardTitleRow>
+                    <Title>Notes</Title>
+                    <CardTitleButton
+                        mode="text"
+                        dark="false"
+                        color="#fff"
+                        icon="square-edit-outline"
+                        color="#28587B"
+                        onPress={() => {
+                            navigation.navigate('CreateNoteForm', {
+                                location: location,
+                                navigatingFrom: 'LocationList',
+                                action: 'Edit',
+                            });
+                        }}
+                    >
+                        {location.notes === '' ? 'Add' : 'Change'}
+                    </CardTitleButton>
+                </CardTitleRow>
+                <CardParagraph>{location.notes}</CardParagraph>
             </Card.Content>
             <Card.Actions>
                 <ButtonSection>
