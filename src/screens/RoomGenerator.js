@@ -320,7 +320,6 @@ export const RoomGenerator = ({ navigation, route }) => {
                     />
                 )}
                 stickySectionHeadersEnabled={false}
-                renderSectionHeader={({ section: { title } }) => <RoomGeneratorTitle>{title}</RoomGeneratorTitle>}
             />
         </RoomGeneratorContainer>
     );

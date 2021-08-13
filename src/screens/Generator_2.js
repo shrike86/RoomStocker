@@ -27,12 +27,16 @@ const GeneratorTitle = styled(Title)`
     margin-bottom: ${(props) => props.theme.space[3]};
     text-align: center;
     padding-left: ${(props) => props.theme.space[3]};
+    font-size: ${(props) => props.theme.fontSizes.h5};
+    font-family: ${(props) => props.theme.fonts.heading};
 `;
 
 const GeneratorValue = styled(Text)`
     padding-left: ${(props) => props.theme.space[4]};
     padding-right: ${(props) => props.theme.space[4]};
     padding-top: ${(props) => props.theme.space[4]};
+    font-size: ${(props) => props.theme.fontSizes.body};
+    font-family: ${(props) => props.theme.fonts.heading};
 `;
 
 //#endregion

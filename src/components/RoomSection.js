@@ -8,15 +8,30 @@ const CardContainer = styled(Card)`
     margin: ${(props) => props.theme.space[3]};
 `;
 
+const CardTitle = styled(Title)`
+    font-size: ${(props) => props.theme.fontSizes.h4};
+    font-family: ${(props) => props.theme.fonts.heading};
+    padding-top: ${(props) => props.theme.space[2]};
+    text-decoration: underline;
+`;
+
 const CardParagraph = styled(Paragraph)`
-    margin-top: ${(props) => props.theme.space[2]};
-    margin-bottom: ${(props) => props.theme.space[2]};
+    font-size: ${(props) => props.theme.fontSizes.paragraph};
+    font-family: ${(props) => props.theme.fonts.heading};
+    padding-bottom: ${(props) => props.theme.space[2]};
+`;
+
+const CardSubheading = styled(Subheading)`
+    font-size: ${(props) => props.theme.fontSizes.title};
+    font-family: ${(props) => props.theme.fonts.heading};
+    padding-bottom: ${(props) => props.theme.space[2]};
 `;
 
 const CardTitleRow = styled.View`
     flex-direction: row;
     justify-content: flex-start;
-    margin-bottom: ${(props) => props.theme.space[2]};
+    margin-bottom: ${(props) => props.theme.space[3]};
+    margin-top: ${(props) => props.theme.space[3]};
 `;
 
 const CardTitleButton = styled(Button)`
@@ -36,46 +51,46 @@ export const RoomSection = ({ navigation, room, deleteFunc, updateNameFunc }) =>
 
     const InhabitantView = () => {
         return (
-            <CardParagraph>
-                <Subheading>Inhabitant: {'\n'}</Subheading>
-                {room.dangerousInhabitant.isAssigned ? room.dangerousInhabitant.displayValue : room.neutralInhabitant.displayValue}
-            </CardParagraph>
+            <>
+                <CardSubheading>Inhabitant:</CardSubheading>
+                <CardParagraph>{room.dangerousInhabitant.isAssigned ? room.dangerousInhabitant.displayValue : room.neutralInhabitant.displayValue}</CardParagraph>
+            </>
         );
     };
 
     const InhabitantReactionView = () => {
         return (
-            <CardParagraph>
-                <Subheading>Inhabitant reaction: {'\n'}</Subheading>
-                {room.inhabitantReaction.displayValue}
-            </CardParagraph>
+            <>
+                <CardSubheading>Inhabitant reaction:</CardSubheading>
+                <CardParagraph>{room.inhabitantReaction.displayValue}</CardParagraph>
+            </>
         );
     };
 
     const TrapView = () => {
         return (
-            <CardParagraph>
-                <Subheading>Traps: {'\n'}</Subheading>
-                {room.trap.displayValue}
-            </CardParagraph>
+            <>
+                <CardSubheading>Traps:</CardSubheading>
+                <CardParagraph>{room.trap.displayValue}</CardParagraph>
+            </>
         );
     };
 
     const TreasureView = () => {
         return (
-            <CardParagraph>
-                <Subheading>Treasure: {'\n'}</Subheading>
-                {room.treasure.displayValue}
-            </CardParagraph>
+            <>
+                <CardSubheading>Treasure:</CardSubheading>
+                <CardParagraph>{room.treasure.displayValue}</CardParagraph>
+            </>
         );
     };
 
     const DeviceView = () => {
         return (
-            <CardParagraph>
-                <Subheading>Device: {'\n'}</Subheading>
-                {room.device.displayValue}
-            </CardParagraph>
+            <>
+                <CardSubheading>Device:</CardSubheading>
+                <CardParagraph>{room.device.displayValue}</CardParagraph>
+            </>
         );
     };
 
@@ -87,7 +102,7 @@ export const RoomSection = ({ navigation, room, deleteFunc, updateNameFunc }) =>
         <CardContainer>
             <Card.Content>
                 <CardTitleRow>
-                    <Title>{room.name}</Title>
+                    <CardTitle>{room.name}</CardTitle>
                     <CardTitleButton
                         mode="text"
                         dark="false"
@@ -106,33 +121,23 @@ export const RoomSection = ({ navigation, room, deleteFunc, updateNameFunc }) =>
                         Change
                     </CardTitleButton>
                 </CardTitleRow>
-                <CardParagraph>
-                    <Subheading>Stocking: {'\n'}</Subheading>
-                    {room.stocking.displayValue}
-                </CardParagraph>
-                <CardParagraph>
-                    <Subheading>Atmosphere: {'\n'}</Subheading>
-                    {room.atmosphere.displayValue}
-                </CardParagraph>
-                <CardParagraph>
-                    <Subheading>Ornamentations: {'\n'}</Subheading>
-                    {room.ornamentation.displayValue}
-                </CardParagraph>
-                <CardParagraph>
-                    <Subheading>Large Items: {'\n'}</Subheading>
-                    {room.largeItem.displayValue}
-                </CardParagraph>
-                <CardParagraph>
-                    <Subheading>Small Items: {'\n'}</Subheading>
-                    {room.smallItem.displayValue}
-                </CardParagraph>
+                <CardSubheading>Stocking:</CardSubheading>
+                <CardParagraph>{room.stocking.displayValue}</CardParagraph>
+                <CardSubheading>Atmosphere:</CardSubheading>
+                <CardParagraph>{room.atmosphere.displayValue}</CardParagraph>
+                <CardSubheading>Ornamentations:</CardSubheading>
+                <CardParagraph>{room.ornamentation.displayValue}</CardParagraph>
+                <CardSubheading>Large Items:</CardSubheading>
+                <CardParagraph>{room.largeItem.displayValue}</CardParagraph>
+                <CardSubheading>Small Items:</CardSubheading>
+                <CardParagraph>{room.smallItem.displayValue}</CardParagraph>
                 {room.neutralInhabitant.isAssigned || room.dangerousInhabitant.isAssigned ? <InhabitantView /> : <BlankView />}
                 {room.inhabitantReaction.isAssigned ? <InhabitantReactionView /> : <BlankView />}
                 {room.trap.isAssigned ? <TrapView /> : <BlankView />}
                 {room.treasure.isAssigned ? <TreasureView /> : <BlankView />}
                 {room.device.isAssigned ? <DeviceView /> : <BlankView />}
                 <CardTitleRow>
-                    <Title>Notes</Title>
+                    <CardTitle>Notes</CardTitle>
                     <CardTitleButton
                         mode="text"
                         dark="false"

@@ -44,12 +44,17 @@ const GeneratorTitle = styled(Title)`
     padding-top: ${(props) => props.theme.space[3]};
     margin-bottom: ${(props) => props.theme.space[3]};
     text-align: center;
+    padding-left: ${(props) => props.theme.space[3]};
+    font-size: ${(props) => props.theme.fontSizes.h5};
+    font-family: ${(props) => props.theme.fonts.heading};
 `;
 
 const GeneratorValue = styled(Text)`
     padding-left: ${(props) => props.theme.space[4]};
     padding-right: ${(props) => props.theme.space[4]};
     padding-top: ${(props) => props.theme.space[4]};
+    font-size: ${(props) => props.theme.fontSizes.body};
+    font-family: ${(props) => props.theme.fonts.heading};
 `;
 
 //#endregion
@@ -129,11 +134,11 @@ export const Generator_3 = ({ navigation, route }) => {
             let concatValue = '';
             // Set the concatenated string value based on the type.
             if (route.params.type === 'Prominent Room Ornamentations') {
-                concatValue = `${value_1} that are ${value_2} and ${value_3}`;
+                concatValue = `${value_1} that are ${value_2.toLowerCase()} and ${value_3.toLowerCase()}`;
             } else if (route.params.type === 'Place') {
                 concatValue = `${value_1} ${value_2} ${value_3}`;
             } else if (route.params.type === 'Neutral Inhabitant') {
-                concatValue = `The neutral inhabitant is a ${value_1}, ${value_2}, ${value_3}`;
+                concatValue = `The neutral inhabitant is a ${value_1}, ${value_2.toLowerCase()}, ${value_3.toLowerCase()}`;
             } else if (route.params.type === 'Traps') {
                 concatValue = `The traps here: ${value_1} and they target the victim's ${value_2} with ${value_3}`;
             } else if (route.params.type === 'Treasure') {

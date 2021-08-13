@@ -17,22 +17,28 @@ const CardTitleRow = styled.View`
     margin-bottom: ${(props) => props.theme.space[2]};
 `;
 
-const CardTitleButton = styled(Button)`
-    margin-left: ${(props) => props.theme.space[2]};
+const CardTitle = styled(Title)`
+    font-size: ${(props) => props.theme.fontSizes.h4};
+    font-family: ${(props) => props.theme.fonts.heading};
+    padding-top: ${(props) => props.theme.space[2]};
+    text-decoration: underline;
 `;
 
-const LocationCardTitle = styled(Card.Title)`
-    font-size: ${(props) => props.theme.lineHeights.title};
+const CardParagraph = styled(Paragraph)`
+    font-size: ${(props) => props.theme.fontSizes.paragraph};
+    font-family: ${(props) => props.theme.fonts.heading};
+    padding-bottom: ${(props) => props.theme.space[2]};
+    padding-top: ${(props) => props.theme.space[2]};
+`;
+
+const CardTitleButton = styled(Button)`
+    margin-left: ${(props) => props.theme.space[2]};
 `;
 
 const ButtonSection = styled.View`
     flex-direction: row;
     justify-content: flex-end;
     margin-top: ${(props) => props.theme.space[3]};
-`;
-
-const CardParagraph = styled(Paragraph)`
-    margin-top: ${(props) => props.theme.space[2]};
 `;
 
 //#endregion
@@ -44,13 +50,11 @@ export const LocationSection = ({ navigation, location, deleteFunc }) => {
 
     return (
         <LocationCardContainer>
-            <LocationCardTitle title={location.locationObject.displayValue} />
             <Card.Content>
-                <CardParagraph>
-                    <Subheading>Number of rooms: {location.rooms.length}</Subheading>
-                </CardParagraph>
+                <CardTitle>{location.locationObject.displayValue}</CardTitle>
+                <CardParagraph>Number of rooms: {location.rooms.length}</CardParagraph>
                 <CardTitleRow>
-                    <Title>Notes</Title>
+                    <CardTitle>Notes</CardTitle>
                     <CardTitleButton
                         mode="text"
                         dark="false"

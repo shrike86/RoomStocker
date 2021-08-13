@@ -73,26 +73,28 @@ export const GameList = ({ navigation, route }) => {
     const saveGamesToStorage = async (value) => {
         try {
             let json = JSON.stringify(value);
-            //console.log('Save to storage: ' + json);
+            console.log('Save to storage: ' + json);
             await AsyncStorage.setItem('stockerKey', json);
             setSaveToStorage(false);
-        } catch (e) {}
+        } catch (e) {
+            console.log('Error saving game to storage: ' + e);
+        }
     };
 
     const loadGamesFromStorage = async () => {
         try {
             const value = await AsyncStorage.getItem('stockerKey');
             const json = JSON.parse(value);
-            //console.log('Loaded from storage: ' + returnValue);
+            console.log('Loaded from storage: ' + json);
             setGames(json);
         } catch (e) {
-            // error reading value
+            console.log('Error loading game from storage: ' + e);
         }
     };
 
     useEffect(() => {
         if (!isDataLoaded) {
-            loadGamesFromStorage();
+            //loadGamesFromStorage();
             setIsDataLoaded(true);
         }
     }, [isDataLoaded]);
@@ -121,7 +123,7 @@ export const GameList = ({ navigation, route }) => {
                 }
             }
 
-            setSaveToStorage(true);
+            //setSaveToStorage(true);
         }
     }, [route.params]);
 

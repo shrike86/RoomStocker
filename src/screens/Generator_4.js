@@ -2,13 +2,13 @@ import React from 'react';
 import styled from 'styled-components/native';
 
 import { useState, useEffect } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { Title, Text, Button } from 'react-native-paper';
 import { getDangerousInhabitant_1, getDangerousInhabitant_2, getDangerousInhabitant_3, getDangerousInhabitant_4 } from '../services/DataService';
 
 //#region Styles
 
-const GeneratorContainer = styled.View`
+const GeneratorContainer = styled.ScrollView`
     flex: 8;
     background-color: ${(props) => props.theme.colours.bg.primary};
 `;
@@ -27,12 +27,16 @@ const GeneratorTitle = styled(Title)`
     margin-bottom: ${(props) => props.theme.space[3]};
     text-align: center;
     padding-left: ${(props) => props.theme.space[3]};
+    font-size: ${(props) => props.theme.fontSizes.h5};
+    font-family: ${(props) => props.theme.fonts.heading};
 `;
 
 const GeneratorValue = styled(Text)`
     padding-left: ${(props) => props.theme.space[4]};
-    padding-top: ${(props) => props.theme.space[4]};
     padding-right: ${(props) => props.theme.space[4]};
+    padding-top: ${(props) => props.theme.space[4]};
+    font-size: ${(props) => props.theme.fontSizes.body};
+    font-family: ${(props) => props.theme.fonts.heading};
 `;
 
 //#endregion
@@ -98,7 +102,7 @@ export const Generator_4 = ({ navigation, route }) => {
                     generatedValue_2: value_2,
                     generatedValue_3: value_3,
                     generatedValue_4: value_4,
-                    displayValue: `The dangerous inhabitant is a ${value_1}, ${value_2}, ${value_3}, ${value_4}`,
+                    displayValue: `The dangerous inhabitant is a ${value_1.toLowerCase()}, ${value_2.toLowerCase()}, ${value_3.toLowerCase()}, ${value_4.toLowerCase()}`,
                     isAssigned: true,
                 },
             });
@@ -107,59 +111,61 @@ export const Generator_4 = ({ navigation, route }) => {
 
     return (
         <GeneratorContainer>
-            <GeneratorTitle>{route.params.type}</GeneratorTitle>
-            <GeneratorValue>{value_1}</GeneratorValue>
-            <ButtonContainer>
-                <GeneratorButton
-                    mode="contained"
-                    dark="true"
-                    color="#28587B"
-                    onPress={() => {
-                        setValue_1(getDangerousInhabitant_1());
-                    }}
-                >
-                    Generate
-                </GeneratorButton>
-            </ButtonContainer>
-            <GeneratorValue>{value_2}</GeneratorValue>
-            <ButtonContainer>
-                <GeneratorButton
-                    mode="contained"
-                    dark="true"
-                    color="#28587B"
-                    onPress={() => {
-                        setValue_2(getDangerousInhabitant_2());
-                    }}
-                >
-                    Generate
-                </GeneratorButton>
-            </ButtonContainer>
-            <GeneratorValue>{value_3}</GeneratorValue>
-            <ButtonContainer>
-                <GeneratorButton
-                    mode="contained"
-                    dark="true"
-                    color="#28587B"
-                    onPress={() => {
-                        setValue_3(getDangerousInhabitant_3());
-                    }}
-                >
-                    Generate
-                </GeneratorButton>
-            </ButtonContainer>
-            <GeneratorValue>{value_4}</GeneratorValue>
-            <ButtonContainer>
-                <GeneratorButton
-                    mode="contained"
-                    dark="true"
-                    color="#28587B"
-                    onPress={() => {
-                        setValue_4(getDangerousInhabitant_4());
-                    }}
-                >
-                    Generate
-                </GeneratorButton>
-            </ButtonContainer>
+            <View>
+                <GeneratorTitle>{route.params.type}</GeneratorTitle>
+                <GeneratorValue>{value_1}</GeneratorValue>
+                <ButtonContainer>
+                    <GeneratorButton
+                        mode="contained"
+                        dark="true"
+                        color="#28587B"
+                        onPress={() => {
+                            setValue_1(getDangerousInhabitant_1());
+                        }}
+                    >
+                        Generate
+                    </GeneratorButton>
+                </ButtonContainer>
+                <GeneratorValue>{value_2}</GeneratorValue>
+                <ButtonContainer>
+                    <GeneratorButton
+                        mode="contained"
+                        dark="true"
+                        color="#28587B"
+                        onPress={() => {
+                            setValue_2(getDangerousInhabitant_2());
+                        }}
+                    >
+                        Generate
+                    </GeneratorButton>
+                </ButtonContainer>
+                <GeneratorValue>{value_3}</GeneratorValue>
+                <ButtonContainer>
+                    <GeneratorButton
+                        mode="contained"
+                        dark="true"
+                        color="#28587B"
+                        onPress={() => {
+                            setValue_3(getDangerousInhabitant_3());
+                        }}
+                    >
+                        Generate
+                    </GeneratorButton>
+                </ButtonContainer>
+                <GeneratorValue>{value_4}</GeneratorValue>
+                <ButtonContainer>
+                    <GeneratorButton
+                        mode="contained"
+                        dark="true"
+                        color="#28587B"
+                        onPress={() => {
+                            setValue_4(getDangerousInhabitant_4());
+                        }}
+                    >
+                        Generate
+                    </GeneratorButton>
+                </ButtonContainer>
+            </View>
         </GeneratorContainer>
     );
 };

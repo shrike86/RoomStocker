@@ -10,12 +10,18 @@ const CardContainer = styled(Card)`
     margin: ${(props) => props.theme.space[3]};
 `;
 
-const GeneratorCardTitle = styled(Card.Title)`
-    font-size: ${(props) => props.theme.lineHeights.title};
+const CardTitle = styled(Title)`
+    font-size: ${(props) => props.theme.fontSizes.h4};
+    font-family: ${(props) => props.theme.fonts.heading};
+    padding-top: ${(props) => props.theme.space[2]};
+    text-decoration: underline;
 `;
 
 const CardParagraph = styled(Paragraph)`
-    margin-top: ${(props) => props.theme.space[2]};
+    font-size: ${(props) => props.theme.fontSizes.paragraph};
+    font-family: ${(props) => props.theme.fonts.heading};
+    padding-bottom: ${(props) => props.theme.space[2]};
+    padding-top: ${(props) => props.theme.space[2]};
 `;
 
 const ButtonSection = styled.View`
@@ -38,12 +44,12 @@ export const GameSection = ({ navigation, game, deleteFunc }) => {
 
     return (
         <CardContainer>
-            <GeneratorCardTitle title={game.name} />
             <Card.Content>
+                <CardTitle>{game.name}</CardTitle>
                 <CardParagraph>Description: {game.description}</CardParagraph>
                 <CardParagraph>Number of Locations: {game.locations ? game.locations.length : '0'}</CardParagraph>
                 <CardTitleRow>
-                    <Title>Notes</Title>
+                    <CardTitle>Notes</CardTitle>
                 </CardTitleRow>
                 <CardParagraph>{game.notes}</CardParagraph>
                 <ButtonSection>

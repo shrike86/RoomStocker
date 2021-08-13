@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { Card, Paragraph, Button } from 'react-native-paper';
+import { Card, Paragraph, Button, Title } from 'react-native-paper';
 
 //#region Styles
 
@@ -9,8 +9,18 @@ const GeneratorCardContainer = styled(Card)`
     margin: ${(props) => props.theme.space[3]};
 `;
 
-const GeneratorCardTitle = styled(Card.Title)`
-    font-size: ${(props) => props.theme.lineHeights.title};
+const CardTitle = styled(Title)`
+    font-size: ${(props) => props.theme.fontSizes.h5};
+    font-family: ${(props) => props.theme.fonts.heading};
+    padding-top: ${(props) => props.theme.space[3]};
+    padding-left: ${(props) => props.theme.space[3]};
+`;
+
+const CardParagraph = styled(Paragraph)`
+    font-size: ${(props) => props.theme.fontSizes.body};
+    font-family: ${(props) => props.theme.fonts.heading};
+    padding-bottom: ${(props) => props.theme.space[2]};
+    padding-top: ${(props) => props.theme.space[2]};
 `;
 
 const GeneratorSectionButton = styled(Button)`
@@ -106,9 +116,9 @@ export const GeneratorSection = ({ navigation, generatorTitle, type, getRoomObje
     };
     return (
         <GeneratorCardContainer>
-            <GeneratorCardTitle title={generatorTitle} />
+            <CardTitle>{generatorTitle} </CardTitle>
             <Card.Content>
-                <Paragraph>{getRoomObject.displayValue}</Paragraph>
+                <CardParagraph>{getRoomObject.displayValue}</CardParagraph>
             </Card.Content>
             <Card.Actions>
                 <GeneratorSectionButton onPress={assignGenerator} mode="contained" dark="true" color="#28587B" icon={getRoomObject.isAssigned == true ? 'swap-vertical' : 'plus'}>
