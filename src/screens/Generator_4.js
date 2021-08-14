@@ -2,13 +2,13 @@ import React from 'react';
 import styled from 'styled-components/native';
 
 import { useState, useEffect } from 'react';
-import { ScrollView, View } from 'react-native';
-import { Title, Text, Button } from 'react-native-paper';
+import { StyleSheet, ScrollView, View } from 'react-native';
+import { Title, Text, Button, FAB } from 'react-native-paper';
 import { getDangerousInhabitant_1, getDangerousInhabitant_2, getDangerousInhabitant_3, getDangerousInhabitant_4 } from '../services/DataService';
 
 //#region Styles
 
-const GeneratorContainer = styled.ScrollView`
+const GeneratorContainer = styled.SafeAreaView`
     flex: 8;
     background-color: ${(props) => props.theme.colours.bg.primary};
 `;
@@ -50,20 +50,20 @@ export const Generator_4 = ({ navigation, route }) => {
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
-            headerRight: () => (
-                <Button
-                    mode="text"
-                    dark="false"
-                    color="#fff"
-                    icon="content-save"
-                    uppercase="false"
-                    onPress={() => {
-                        setIsSave(true);
-                    }}
-                >
-                    Save
-                </Button>
-            ),
+            // headerRight: () => (
+            //     <Button
+            //         mode="text"
+            //         dark="false"
+            //         color="#fff"
+            //         icon="content-save"
+            //         uppercase="false"
+            //         onPress={() => {
+            //             setIsSave(true);
+            //         }}
+            //     >
+            //         Save
+            //     </Button>
+            // ),
             headerLeft: () => (
                 <Button
                     mode="text"
@@ -109,9 +109,18 @@ export const Generator_4 = ({ navigation, route }) => {
         }
     });
 
+    const styles = StyleSheet.create({
+        fab: {
+            position: 'absolute',
+            margin: 30,
+            right: 0,
+            bottom: 20,
+        },
+    });
+
     return (
         <GeneratorContainer>
-            <View>
+            <ScrollView>
                 <GeneratorTitle>{route.params.type}</GeneratorTitle>
                 <GeneratorValue>{value_1}</GeneratorValue>
                 <ButtonContainer>
@@ -165,7 +174,17 @@ export const Generator_4 = ({ navigation, route }) => {
                         Generate
                     </GeneratorButton>
                 </ButtonContainer>
-            </View>
+            </ScrollView>
+            <FAB
+                color="#FFFFFF"
+                style={styles.fab}
+                icon="content-save"
+                label="Save"
+                theme={{ colors: { primary: '#FFFFFF', background: '#28587B', accent: '#28587B' } }}
+                onPress={() => {
+                    setIsSave(true);
+                }}
+            />
         </GeneratorContainer>
     );
 };

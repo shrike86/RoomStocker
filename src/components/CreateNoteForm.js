@@ -1,12 +1,18 @@
 import * as React from 'react';
 import styled from 'styled-components/native';
-import { TextInput, Button, Text } from 'react-native-paper';
+import { TextInput, Button, FAB } from 'react-native-paper';
+import { StyleSheet } from 'react-native';
 import { useState, useEffect } from 'react';
 
-const FormContainer = styled.View`
+const FormContainer = styled.ScrollView`
     padding-top: ${(props) => props.theme.space[2]};
     padding-right: ${(props) => props.theme.space[3]};
     padding-left: ${(props) => props.theme.space[3]};
+`;
+
+const Container = styled.SafeAreaView`
+    flex: 1;
+    background-color: ${(props) => props.theme.colours.bg.primary};
 `;
 
 export const CreateNoteForm = ({ navigation, route }) => {
@@ -15,20 +21,20 @@ export const CreateNoteForm = ({ navigation, route }) => {
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
-            headerRight: () => (
-                <Button
-                    mode="text"
-                    dark="false"
-                    color="#fff"
-                    icon="content-save"
-                    uppercase="false"
-                    onPress={() => {
-                        setIsSave(true);
-                    }}
-                >
-                    Save
-                </Button>
-            ),
+            // headerRight: () => (
+            //     <Button
+            //         mode="text"
+            //         dark="false"
+            //         color="#fff"
+            //         icon="content-save"
+            //         uppercase="false"
+            //         onPress={() => {
+            //             setIsSave(true);
+            //         }}
+            //     >
+            //         Save
+            //     </Button>
+            // ),
             headerLeft: () => (
                 <Button
                     mode="text"
@@ -84,16 +90,37 @@ export const CreateNoteForm = ({ navigation, route }) => {
         }
     }, [route.params]);
 
+    const styles = StyleSheet.create({
+        fab: {
+            position: 'absolute',
+            margin: 30,
+            right: 0,
+            bottom: 20,
+        },
+    });
+
     return (
-        <FormContainer>
-            <TextInput
-                label="Location Note"
-                mode="outlined"
-                multiline={true}
-                theme={{ colors: { primary: '#28587B' } }}
-                value={note}
-                onChangeText={(newNote) => setNote(newNote)}
-            ></TextInput>
-        </FormContainer>
+        <Container>
+            <FormContainer>
+                <TextInput
+                    label="Location Note"
+                    mode="outlined"
+                    multiline={true}
+                    theme={{ colors: { primary: '#28587B' } }}
+                    value={note}
+                    onChangeText={(newNote) => setNote(newNote)}
+                ></TextInput>
+            </FormContainer>
+            <FAB
+                color="#FFFFFF"
+                style={styles.fab}
+                icon="content-save"
+                label="Save"
+                theme={{ colors: { primary: '#FFFFFF', background: '#28587B', accent: '#28587B' } }}
+                onPress={() => {
+                    setIsSave(true);
+                }}
+            />
+        </Container>
     );
 };

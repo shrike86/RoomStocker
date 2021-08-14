@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { Card, Paragraph, Button, Subheading, Portal, Dialog, Title } from 'react-native-paper';
 
 const CardContainer = styled(Card)`
-    background-color: ${(props) => props.theme.colours.bg.primary};
+    background-color: ${(props) => props.theme.colours.bg.secondary};
     margin: ${(props) => props.theme.space[3]};
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 
 const CardTitle = styled(Title)`
@@ -41,7 +42,8 @@ const CardTitleButton = styled(Button)`
 const ButtonSection = styled.View`
     flex-direction: row;
     justify-content: flex-end;
-    margin-top: ${(props) => props.theme.space[4]};
+    margin-top: ${(props) => props.theme.space[3]};
+    margin-bottom: ${(props) => props.theme.space[3]};
 `;
 
 export const RoomSection = ({ navigation, room, deleteFunc, updateNameFunc }) => {
@@ -110,7 +112,7 @@ export const RoomSection = ({ navigation, room, deleteFunc, updateNameFunc }) =>
                         icon="square-edit-outline"
                         color="#28587B"
                         onPress={() => {
-                            navigation.navigate('ChangeLocationName', {
+                            navigation.navigate('ChangeRoomName', {
                                 room: room,
                                 navigatingFrom: 'RoomList',
                                 action: 'Edit',

@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components/native';
 
 import { useState, useEffect } from 'react';
-import { Title, Text, Button } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { Title, Text, Button, FAB } from 'react-native-paper';
 import {
     getPlace_1,
     getPlace_2,
@@ -69,20 +70,20 @@ export const Generator_3 = ({ navigation, route }) => {
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
-            headerRight: () => (
-                <Button
-                    mode="text"
-                    dark="false"
-                    color="#fff"
-                    icon="content-save"
-                    uppercase="false"
-                    onPress={() => {
-                        setIsSave(true);
-                    }}
-                >
-                    Save
-                </Button>
-            ),
+            // headerRight: () => (
+            //     <Button
+            //         mode="text"
+            //         dark="false"
+            //         color="#fff"
+            //         icon="content-save"
+            //         uppercase="false"
+            //         onPress={() => {
+            //             setIsSave(true);
+            //         }}
+            //     >
+            //         Save
+            //     </Button>
+            // ),
             headerLeft: () => (
                 <Button
                     mode="text"
@@ -182,6 +183,15 @@ export const Generator_3 = ({ navigation, route }) => {
         }
     }, [isSave]);
 
+    const styles = StyleSheet.create({
+        fab: {
+            position: 'absolute',
+            margin: 30,
+            right: 0,
+            bottom: 20,
+        },
+    });
+
     return (
         <GeneratorContainer>
             <GeneratorTitle>{route.params.type}</GeneratorTitle>
@@ -254,6 +264,16 @@ export const Generator_3 = ({ navigation, route }) => {
                     Generate
                 </GeneratorButton>
             </ButtonContainer>
+            <FAB
+                color="#FFFFFF"
+                style={styles.fab}
+                icon="content-save"
+                label="Save"
+                theme={{ colors: { primary: '#FFFFFF', background: '#28587B', accent: '#28587B' } }}
+                onPress={() => {
+                    setIsSave(true);
+                }}
+            />
         </GeneratorContainer>
     );
 };

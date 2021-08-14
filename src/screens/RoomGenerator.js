@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 
 import styled from 'styled-components';
 
-import { SectionList } from 'react-native';
+import { SectionList, StyleSheet } from 'react-native';
 import { GeneratorSection } from '../components/GeneratorSection';
-import { Title, Button } from 'react-native-paper';
+import { Title, Button, FAB } from 'react-native-paper';
 
 import { addCardsBasedOnRoomState } from '../services/DataService';
 
@@ -30,20 +30,20 @@ export const RoomGeneratorTitle = styled(Title)`
 export const RoomGenerator = ({ navigation, route }) => {
     React.useLayoutEffect(() => {
         navigation.setOptions({
-            headerRight: () => (
-                <Button
-                    mode="text"
-                    dark="false"
-                    color="#fff"
-                    icon="content-save"
-                    uppercase="false"
-                    onPress={() => {
-                        setIsSave(true);
-                    }}
-                >
-                    Save
-                </Button>
-            ),
+            // headerRight: () => (
+            //     <Button
+            //         mode="text"
+            //         dark="false"
+            //         color="#fff"
+            //         icon="content-save"
+            //         uppercase="false"
+            //         onPress={() => {
+            //             setIsSave(true);
+            //         }}
+            //     >
+            //         Save
+            //     </Button>
+            // ),
             headerLeft: () => (
                 <Button
                     mode="text"
@@ -303,6 +303,15 @@ export const RoomGenerator = ({ navigation, route }) => {
         }
     }, [route.params]);
 
+    const styles = StyleSheet.create({
+        fab: {
+            position: 'absolute',
+            margin: 30,
+            right: 0,
+            bottom: 20,
+        },
+    });
+
     return (
         <RoomGeneratorContainer>
             <SectionList
@@ -320,6 +329,16 @@ export const RoomGenerator = ({ navigation, route }) => {
                     />
                 )}
                 stickySectionHeadersEnabled={false}
+            />
+            <FAB
+                color="#FFFFFF"
+                style={styles.fab}
+                icon="content-save"
+                label="Save"
+                theme={{ colors: { primary: '#FFFFFF', background: '#28587B', accent: '#28587B' } }}
+                onPress={() => {
+                    setIsSave(true);
+                }}
             />
         </RoomGeneratorContainer>
     );

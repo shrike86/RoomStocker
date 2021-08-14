@@ -7,7 +7,7 @@ import { GameList } from '../screens/GameList';
 import { CreateGame } from '../screens/CreateGame';
 import { RoomList } from '../screens/RoomList';
 import { LocationList } from '../screens/LocationList';
-import { ChangeLocationName } from './ChangeLocationName';
+import { ChangeRoomName } from '../components/ChangeRoomName';
 import { CreateNoteForm } from './CreateNoteForm';
 import { RoomGenerator } from '../screens/RoomGenerator';
 import { Generator_1 } from '../screens/Generator_1';
@@ -115,10 +115,11 @@ export const MainStackNavigator = ({ navigation, route }) => {
                 })}
             />
             <Stack.Screen
-                name="ChangeLocationName"
-                component={ChangeLocationName}
+                name="ChangeRoomName"
+                component={ChangeRoomName}
                 options={() => ({
                     title: 'Name',
+                    backgroundColor: '#ffffff',
                     headerTitleAlign: 'center',
                     headerTintColor: '#fff',
                     headerStyle: { backgroundColor: '#28587B' },
@@ -130,6 +131,7 @@ export const MainStackNavigator = ({ navigation, route }) => {
                 component={CreateNoteForm}
                 options={() => ({
                     title: 'Note',
+                    backgroundColor: '#ffffff',
                     headerTitleAlign: 'center',
                     headerTintColor: '#fff',
                     headerStyle: { backgroundColor: '#28587B' },

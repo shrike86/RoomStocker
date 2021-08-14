@@ -151,7 +151,15 @@ export const AboutScreen = () => {
                 >
                     How to
                 </AboutButton>
-                <AboutButton mode="outlined" icon="discord" dark="false" color="#28587B">
+                <AboutButton
+                    mode="outlined"
+                    icon="discord"
+                    dark="false"
+                    color="#28587B"
+                    onPress={() => {
+                        handleLink('https://discord.gg/NDrtRKs');
+                    }}
+                >
                     Discord
                 </AboutButton>
                 <AboutButton

@@ -5,8 +5,9 @@ import { Card, Paragraph, Button, Title } from 'react-native-paper';
 //#region Styles
 
 const GeneratorCardContainer = styled(Card)`
-    background-color: ${(props) => props.theme.colours.bg.primary};
+    background-color: ${(props) => props.theme.colours.bg.secondary};
     margin: ${(props) => props.theme.space[3]};
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 `;
 
 const CardTitle = styled(Title)`
