@@ -94,7 +94,7 @@ export const Generator_2 = ({ navigation, route }) => {
             if (route.params.type === 'Inhabitant Reaction to Interlopers') {
                 concatValue = `Mood: ${value_1}.\nAction: ${value_2}`;
             } else if (route.params.type === 'Device') {
-                concatValue = `The device's action: ${value_1} \nThe device's operation: ${value_2}`;
+                concatValue = `The device's action: ${value_1.toLowerCase()} \nThe device's operation: ${value_2.toLowerCase()}`;
             }
 
             navigation.navigate('RoomGenerator', {

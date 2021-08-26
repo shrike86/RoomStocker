@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "RoomStocker",
-    "slug": "Generic-Room-Stocker",
+    "name": "RPG Room Stocker",
+    "slug": "RPG-Room-Stocker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -23,7 +23,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.gorgzugames.rpgroomstocker",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

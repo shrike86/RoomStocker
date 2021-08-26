@@ -141,9 +141,9 @@ export const Generator_3 = ({ navigation, route }) => {
             } else if (route.params.type === 'Neutral Inhabitant') {
                 concatValue = `The neutral inhabitant is a ${value_1}, ${value_2.toLowerCase()}, ${value_3.toLowerCase()}`;
             } else if (route.params.type === 'Traps') {
-                concatValue = `The traps here: ${value_1} and they target the victim's ${value_2} with ${value_3}`;
+                concatValue = `The traps here: ${value_1.toLowerCase()} and they target the victim's ${value_2.toLowerCase()} with ${value_3.toLowerCase()}`;
             } else if (route.params.type === 'Treasure') {
-                concatValue = `The treasure in the room is a: ${value_1}, ${value_2}, ${value_3}`;
+                concatValue = `The treasure in the room is a: ${value_1.toLowerCase()}, ${value_2.toLowerCase()}, ${value_3.toLowerCase()}`;
             }
 
             if (route.params.navigatingFrom === 'RoomGenerator') {
